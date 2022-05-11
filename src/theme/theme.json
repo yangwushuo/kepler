@@ -1,0 +1,14 @@
+{
+  "white":{
+      "--maintextcolor": "#000000",
+      "--mainbgcolor": "#ffffff",
+      "--mainbordercolor":"1px solid red",
+      "--otherbgcolor":"#eaedf1"
+  },
+  "black":{
+      "--maintextcolor": "#ffffff",
+      "--mainbgcolor": "#2F38AB",
+      "--mainbordercolor":"1px solid blue",
+      "--otherbgcolor":"#25252b"
+  }
+}
