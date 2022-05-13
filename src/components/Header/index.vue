@@ -8,11 +8,16 @@
         <div class="site-header__middle">
           <nav class="nav">
             <ul class="nav__wrapper">
-              <li class="nav__item"><a href="#">交易所</a></li>
-              <li class="nav__item"><a href="#">链上</a></li>
-              <li class="nav__item"><a href="#">NFT</a></li>
-              <li class="nav__item"><a href="#">市场</a></li>
-              <li class="nav__item"><a href="#">动态</a></li>
+              <li class="nav__item"><a href="javascript:void(0);">首页</a></li>
+              <li class="nav__item">
+                <a href="javascript:void(0);" @click="goExchaneDataView"
+                  >交易所数据</a
+                >
+              </li>
+              <li class="nav__item"><a href="javascript:void(0);">链上数据</a></li>
+              <li class="nav__item"><a href="javascript:void(0);">NFT藏品</a></li>
+              <li class="nav__item"><a href="javascript:void(0);">市场指数</a></li>
+              <li class="nav__item"><a href="javascript:void(0);">动态</a></li>
             </ul>
           </nav>
         </div>
@@ -30,16 +35,30 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 export default {
   name: "Header",
+  setup() {
+    //使用router
+    const router = useRouter();
+
+    //点击事件
+    function goExchaneDataView() {
+      router.push("/exchangeData");
+    }
+
+    return {
+      goExchaneDataView,
+    };
+  },
 };
 </script>
 
 <style scoped>
-.brand {
-  font-weight: bold;
-  font-size: 30px;
-  color: white;
+.site-header {
+  /* position: relative; */
+  background-color: var(--mainbgcolor);
+  border-bottom: 0.5px solid rgba(207, 207, 207, 0.2);
 }
 
 .wrapper {
@@ -48,12 +67,14 @@ export default {
   padding-right: 1rem;
   margin-left: auto;
   margin-right: auto;
+  height: 7vh;
 }
 
-.site-header {
-  position: relative;
-  background-color: var(--mainbgcolor);
-  border-bottom: 1px solid rgba(207, 207, 207, 0.2);
+/* logo样式 */
+.brand {
+  font-weight: bold;
+  font-size: 30px;
+  color: white;
 }
 
 .site-header__wrapper {
@@ -118,8 +139,16 @@ export default {
 .nav__item a {
   display: block;
   padding: 1.5rem 1rem;
-  font-size: 15px;
+  font-size: 16px;
   text-decoration: none;
+}
+
+.nav__item a:hover {
+  color: var(--sideBarItemActiveFontColor);
+}
+
+.nav__item a:focus {
+  color: var(--sideBarItemActiveFontColor);
 }
 
 .el-button {
@@ -130,6 +159,10 @@ export default {
   background: #90b2cb !important;
   opacity: 0.6;
   border: 0 !important;
+  color: black !important;
+}
+
+.el-button:focus {
   color: black !important;
 }
 </style>

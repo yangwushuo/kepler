@@ -7,8 +7,12 @@
   },
   "black":{
       "--maintextcolor": "#ffffff",
-      "--mainbgcolor": "#2F38AB",
+      "--mainbgcolor": "#24292E",
       "--mainbordercolor":"1px solid blue",
-      "--otherbgcolor":"#25252b"
+      "--otherbgcolor":"#25252b",
+      "--sideBarColor": "#24292E",
+      "--sideBarItemHoverColor": "#35547D",
+      "--sideBarItemHoverFontColor": "#FFFFFF",
+      "--sideBarItemActiveFontColor": "#1F9CE4"
   }
 }

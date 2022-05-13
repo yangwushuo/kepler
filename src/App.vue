@@ -1,7 +1,8 @@
 <template>
   <div>
     <Header></Header>
-    <router-link></router-link>
+    <router-view></router-view>
+    <Footer/>
   </div>
 </template>
 
@@ -19,6 +20,7 @@ export default {
 </script>
 
 <style>
+
 body{
   background: var(--mainbgcolor);
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -28,6 +30,5 @@ a {
   text-decoration: none;
   color: white;
 }
-
 
 </style>

@@ -7,16 +7,25 @@ addColor(true)
 
 //字体引入
 import '@/assets/font/font.css';
+//引入icon
+import '@/assets/icon/iconfont.css';
 
-//使用element
-import {ElButton} from 'element-plus';
-import 'element-plus/theme-chalk/index.css';
-
-const app = createApp(App);
+const app = createApp(App); 
 
 //注册插件
-app.use(ElButton);
+//使用element
+import ElementPlus  from 'element-plus';
+import 'element-plus/theme-chalk/index.css';
+import zhCn from 'element-plus/es/locale/lang/zh-cn';//ElementPlus 组件内部默认使用英语，使用中文语言
+app.use(ElementPlus,{
+  zhCn
+});
+
+//路由使用
+import router from './router'
+app.use(router);
 //注册组件
+
 
 app.mount('#app');
 
