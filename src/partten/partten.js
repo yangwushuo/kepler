@@ -61,5 +61,35 @@ export const exchangeSideBar = {
         }  
       ]
     }, 
+    {
+      id: '1-5',
+      name: '稳定币流向',
+      twoItems:[
+        {
+          id: '1-5-1',
+          name: '五大交易所',
+        },
+        {
+          id: '1-5-2',
+          name: 'Biance',
+        },
+        {
+          id: '1-5-3',
+          name: 'Coinbase',
+        },
+        {
+          id: '1-5-4',
+          name: 'Okex',
+        },
+        {
+          id: '1-5-5',
+          name: 'FTX',
+        },
+        {
+          id: '1-5-6',
+          name: 'Bitmex',
+        },
+      ]
+    }, 
   ]
 };

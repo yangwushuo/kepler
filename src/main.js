@@ -25,6 +25,8 @@ app.use(ElementPlus,{
 import router from './router'
 app.use(router);
 //注册组件
+import CScrollbar from 'c-scrollbar';
+app.use(CScrollbar)
 
 
 app.mount('#app');

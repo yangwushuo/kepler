@@ -13,6 +13,8 @@
       "--sideBarColor": "#24292E",
       "--sideBarItemHoverColor": "#35547D",
       "--sideBarItemHoverFontColor": "#FFFFFF",
-      "--sideBarItemActiveFontColor": "#1F9CE4"
+      "--sideBarItemActiveFontColor": "#1F9CE4",
+      "--scrollColor": "#1F9CE4",
+      "--scrollBarColor": "#1F9CE4"
   }
 }
