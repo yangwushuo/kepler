@@ -1,18 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-const Exchange = () =>  import('@/views/Exchange');
-
-const routes = [
-    {
-        path: '/exchangeData',
-        name: 'exchangeData',
-        component: Exchange,
-        children: [
-            
-        ]
-    },
-]
-
+//引入routes.js路由配置
+import routes from './routes';
 const router = createRouter({
     //history模式：createWebHistory , hash模式：createWebHashHistory
     history: createWebHistory(process.env.BASE_URL),

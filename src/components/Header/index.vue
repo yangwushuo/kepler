@@ -8,16 +8,28 @@
         <div class="site-header__middle">
           <nav class="nav">
             <ul class="nav__wrapper">
-              <li class="nav__item"><a href="javascript:void(0);">首页</a></li>
               <li class="nav__item">
-                <a href="javascript:void(0);" @click="goExchaneDataView"
+                <a href="javascript:void(0);" @click="gotoRoute('/home')">首页</a>
+              </li>
+              <li class="nav__item">
+                <a
+                  href="javascript:void(0);"
+                  @click="gotoRoute('/exchangeData')"
                   >交易所数据</a
                 >
               </li>
-              <li class="nav__item"><a href="javascript:void(0);">链上数据</a></li>
-              <li class="nav__item"><a href="javascript:void(0);">NFT藏品</a></li>
-              <li class="nav__item"><a href="javascript:void(0);">市场指数</a></li>
-              <li class="nav__item"><a href="javascript:void(0);">动态</a></li>
+              <li class="nav__item">
+                <a href="javascript:void(0);" @click="gotoRoute">链上数据</a>
+              </li>
+              <li class="nav__item">
+                <a href="javascript:void(0);" @click="gotoRoute">NFT藏品</a>
+              </li>
+              <li class="nav__item">
+                <a href="javascript:void(0);" @click="gotoRoute">市场指数</a>
+              </li>
+              <li class="nav__item">
+                <a href="javascript:void(0);" @click="gotoRoute">动态</a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -35,20 +47,19 @@
 </template>
 
 <script>
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
 export default {
   name: "Header",
   setup() {
-    //使用router
+    
     const router = useRouter();
 
-    //点击事件
-    function goExchaneDataView() {
-      router.push("/exchangeData");
+    function gotoRoute(path = "") {
+      router.push(path);
     }
 
     return {
-      goExchaneDataView,
+      gotoRoute,
     };
   },
 };

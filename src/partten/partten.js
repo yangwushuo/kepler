@@ -8,10 +8,12 @@ export const exchangeSideBar = {
         {
           id: '1-1-1',
           name: '合约持仓量',
+          route: '/exchangeData/contractInventory'
         },
         {
           id: '1-1-2',
           name: '期权持仓量',
+          route: '/exchangeData/optionsInventory'
         }
       ]
     },

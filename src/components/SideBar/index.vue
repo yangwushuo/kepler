@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper_sidBar">
     <c-scrollbar 
     maxHeight="93vh"
     :vBarStyle="{'background-color':'rgba(255, 255, 255, 0.2)'}"
@@ -35,6 +35,7 @@
               :index="twoItem.id"
               v-for="(twoItem, index) in oneItem.twoItems"
               :key="twoItem.id"
+              @click="goToRoute(twoItem.route)"
               ><span class="item">{{ twoItem.name }}</span></el-menu-item
             >
           </el-sub-menu>
@@ -46,6 +47,7 @@
 
 <script>
 import { onBeforeMount, reactive, toRefs } from "vue";
+import { useRouter } from "vue-router";
 export default {
   name: "SideBar",
   props: ["menuInfo"],
@@ -57,8 +59,8 @@ export default {
       console.log(key, keyPath);
     };
 
+    const router = useRouter();
     let menuInfo = reactive(props.menuInfo);
-
     let data = reactive({
       //默认打开的菜单索引
       openeds: ["1"],
@@ -82,9 +84,14 @@ export default {
       return ids;
     }
 
+    //指定路由跳转
+    function goToRoute(path=''){
+      router.push(path);
+    }
+
+    //组件加载之前
     onBeforeMount(() => {
       data.openeds = findAllIdValue(menuInfo.oneItems);
-      console.log(data.openeds);
     });
 
     return {
@@ -92,13 +99,14 @@ export default {
       ...menuInfo,
       handleOpen,
       handleClose,
+      goToRoute,
     };
   },
 };
 </script>
 
 <style scoped>
-.wrapper {
+.wrapper_sidBar {
   position: relative;
   min-height: 93vh;
   max-height: 93vh;

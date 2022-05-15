@@ -3,35 +3,25 @@
     <div class="sideBar">
       <SideBar :menuInfo="menuInfo"></SideBar>
     </div>
-    <div class="echarts">
-      <div class="breadcrumb">
-        
-        <Breadcrumb></Breadcrumb>
-      </div>
-      <LargeScaleAreaChart></LargeScaleAreaChart>
+    <div class="wrapper_middle">
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import { onBeforeMount, reactive, toRefs, watchEffect } from "vue";
+import { onBeforeMount, reactive, toRefs } from "vue";
 //侧边栏
 import SideBar from "@/components/SideBar";
-//大数据量面积图
-import LargeScaleAreaChart from "@/components/Echarts/LargeScaleAreaChart";
-//面包屑
-import Breadcrumb from "@/components/Breadcrumb";
 //常量数据
 import { Partten } from "@/partten/index";
 export default {
   name: "Exchange",
   components: {
     SideBar,
-    LargeScaleAreaChart,
-    Breadcrumb,
   },
   setup() {
-    //菜单数据
+    //菜单数据  //请求服务器获取菜单栏数据
     let menuInfo = reactive(Partten.exchangeSideBar);
     //数据
     let data = reactive({
@@ -54,11 +44,17 @@ export default {
 
 <style scoped>
 .wrapper {
+  width: 100%;
   display: flex;
   height: auto;
+  flex-direction: row ;
 }
-.echarts {
-  width: 100%;
+.wrapper_middle {
+  width: 87vw;
   height: 93vh;
+  display: flex;
+  flex-direction: column;
+}
+.breadcrumb {
 }
 </style>
