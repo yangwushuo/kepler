@@ -1,37 +1,47 @@
 <template>
-  <div class="wrapper_tag">
-    <el-tag
-      v-for="tag in tags"
-      :key="tag.name"
-      class="mx-1"
-      closable
-      :type="tag.type"
-    >
-      {{ tag.name }}
-    </el-tag>
+  <div class="wrapper_tags">
+    <div class="wrapper_tag" v-for="tag in tags" :key="tag.name">
+      <el-tag class="mx-1" closable :type="tag.type" size="large">
+        {{ tag.name }}
+      </el-tag>
+    </div>
   </div>
 </template>
 
 <script>
-import {ref} from 'vue';
+import { ref } from "vue";
 export default {
   name: "Tag",
   setup() {
     const tags = ref([
-      { name: "Tag 1", type: "" },
-      { name: "Tag 2", type: "success" },
-      { name: "Tag 3", type: "info" },
-      { name: "Tag 4", type: "warning" },
-      { name: "Tag 5", type: "danger" },
+      { name: "BTC", type: "info" },
+      { name: "ETH", type: "info" },
+      { name: "SOL", type: "info" },
+      { name: "DOT", type: "info" },
+      { name: "XRP", type: "info" },
     ]);
 
     return {
-      tags
-    }
+      tags,
+    };
   },
 };
 </script>
 
 <style scoped>
+.wrapper_tags {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 
+.wrapper_tags .wrapper_tag{
+  padding-left: 5px;
+}
+
+.mx-1{
+  font-size: 1rem;
+  font-weight: bold;
+}
 </style>

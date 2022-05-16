@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <p class="selectTitle">Token选择</p>
+  <div class="more_select">
+    <!-- <p class="selectTitle">Token选择</p> -->
     <el-select
       v-model="value"
       multiple
       collapse-tags
       class="element_select"
-      placeholder="TOKEN"
+      placeholder="TOKEN 选择"
       filterable
       :loading="loadingOpen"
       loading-text="加载中..."
@@ -42,6 +42,7 @@
 import { reactive, ref, toRefs } from "vue";
 export default {
   name: "MoreSelect",
+  props: [],
   setup() {
     const value = ref([]);
     const options = [
@@ -110,6 +111,13 @@ export default {
 </script>
 
 <style scoped>
+
+.more_select{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 2rem 0 2rem;
+}
 .selectTitle {
   font-size: 20px;
   color: white;

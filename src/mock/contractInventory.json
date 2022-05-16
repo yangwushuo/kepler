@@ -1,0 +1,163 @@
+{
+	"code": "0",
+	"msg": "success",
+	"data": [
+		{
+			"exchangeName": "Binance",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 3275282893.6464,
+			"openInterestAmount": 109632.333,
+			"volUsd": 20253928329.47,
+			"h24Change": 0.47,
+			"rate": 23.88,
+			"h1OIChangePercent": -0.25,
+			"h4OIChangePercent": 2.09
+		},
+		{
+			"exchangeName": "FTX",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 1800833625.5066,
+			"openInterestAmount": 60094.4779,
+			"volUsd": 3342014480.9817,
+			"h24Change": -0.66,
+			"rate": 13.13,
+			"h1OIChangePercent": 0.19,
+			"h4OIChangePercent": 2.18
+		},
+		{
+			"exchangeName": "CME",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 1731631500,
+			"openInterestAmount": 58050,
+			"volUsd": 1176644350,
+			"h24Change": -1.32,
+			"rate": 12.62,
+			"h1OIChangePercent": -0.35,
+			"h4OIChangePercent": 0.36
+		},
+		{
+			"exchangeName": "Okex",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 1662254252.937,
+			"openInterestAmount": 55651.3970134388791165,
+			"volUsd": 4685635579.513,
+			"h24Change": -0.14,
+			"rate": 12.12,
+			"h1OIChangePercent": -0.66,
+			"h4OIChangePercent": -0.96
+		},
+		{
+			"exchangeName": "Bybit",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 1490575516.25,
+			"openInterestAmount": 49868.95,
+			"volUsd": 5908600119,
+			"h24Change": -0.21,
+			"rate": 10.87,
+			"h1OIChangePercent": -1.8,
+			"h4OIChangePercent": -0.52
+		},
+		{
+			"exchangeName": "Bitget",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 1283068557.67,
+			"openInterestAmount": 42979.391,
+			"volUsd": 5522306845.2655,
+			"h24Change": 0.48,
+			"rate": 9.35,
+			"h1OIChangePercent": 0.25,
+			"h4OIChangePercent": 10.06
+		},
+		{
+			"exchangeName": "Deribit",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 1134158740,
+			"openInterestAmount": 37792.63,
+			"volUsd": 399253090,
+			"h24Change": 0.28,
+			"rate": 8.27,
+			"h1OIChangePercent": 0,
+			"h4OIChangePercent": 0
+		},
+		{
+			"exchangeName": "Bitmex",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 408538154.39903565,
+			"openInterestAmount": 13686.346,
+			"volUsd": 692056412.327679,
+			"h24Change": 1.61,
+			"rate": 2.97,
+			"h1OIChangePercent": -0.66,
+			"h4OIChangePercent": -4.19
+		},
+		{
+			"exchangeName": "Bitfinex",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 406330538.3479515,
+			"openInterestAmount": 13612.41334499,
+			"volUsd": 79257204.711987,
+			"h24Change": -1.75,
+			"rate": 2.96,
+			"h1OIChangePercent": -0.52,
+			"h4OIChangePercent": 0.3
+		},
+		{
+			"exchangeName": "Huobi",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 253778836,
+			"openInterestAmount": 8496.162225767258324594,
+			"volUsd": 868945122.25,
+			"h24Change": 1.89,
+			"rate": 1.85,
+			"h1OIChangePercent": -0.1,
+			"h4OIChangePercent": -0.59
+		},
+		{
+			"exchangeName": "dYdX",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 186558849.2427452,
+			"openInterestAmount": 6248.294,
+			"volUsd": 348015859.2757,
+			"h24Change": 0.76,
+			"rate": 1.36,
+			"h1OIChangePercent": -0.06,
+			"h4OIChangePercent": 1.97
+		},
+		{
+			"exchangeName": "Kraken",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 70052643.2983,
+			"openInterestAmount": 2343.69,
+			"volUsd": 106977946.5735,
+			"h24Change": 0.44,
+			"rate": 0.51,
+			"h1OIChangePercent": 0.04,
+			"h4OIChangePercent": -0.55
+		},
+		{
+			"exchangeName": "CoinEx",
+			"symbol": "BTC",
+			"price": 29873,
+			"openInterest": 8311512.219372,
+			"openInterestAmount": 278.175,
+			"volUsd": 222553607.5797,
+			"h24Change": -13.16,
+			"rate": 0.06,
+			"h1OIChangePercent": -5.52,
+			"h4OIChangePercent": -0.13
+		}
+	],
+	"success": true
+}

@@ -42,5 +42,6 @@ export default {
 .wrapper_contractInventory_top{
   display: flex;
   flex-direction: row;
+  min-height: 6rem;
 }
 </style>

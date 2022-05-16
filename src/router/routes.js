@@ -1,6 +1,7 @@
 const Home = () => import('@/views/Home'); //首页
 const Exchange = () => import('@/views/Exchange');  //交易所
 const ContractInventory = () => import('@/views/ContractInventory'); //合约持仓量
+const OptionInventory = () => import('@/views/OptionInventory'); //期权持仓量
 
 export default [
 
@@ -36,7 +37,7 @@ export default [
       {
         path: 'optionsInventory',
         name: 'optionsInventory',
-        component: ContractInventory,
+        component: OptionInventory,
       },
     ]
   }, 
