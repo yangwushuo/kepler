@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper_sidBar">
-    <c-scrollbar 
-    maxHeight="93vh"
-    :vBarStyle="{'background-color':'rgba(255, 255, 255, 0.2)'}"
-    :vThumbStyle="{'background-color': 'rgba(207, 207, 207, 0.2)'}"
+    <c-scrollbar
+      :maxHeight="scrollbarHeight"
+      :vBarStyle="{ 'background-color': 'rgba(255, 255, 255, 0.2)' }"
+      :vThumbStyle="{ 'background-color': 'rgba(207, 207, 207, 0.2)' }"
     >
       <el-menu
         default-active="2"
@@ -46,11 +46,11 @@
 </template>
 
 <script>
-import { onBeforeMount, reactive, toRefs } from "vue";
+import { onBeforeMount, reactive, toRefs, ref, watch, computed} from "vue";
 import { useRouter } from "vue-router";
 export default {
   name: "SideBar",
-  props: ["menuInfo"],
+  props: ["menuInfo", "scrollbar_height"],
   setup(props) {
     const handleOpen = (key, keyPath) => {
       console.log(key, keyPath);
@@ -64,6 +64,12 @@ export default {
     let data = reactive({
       //默认打开的菜单索引
       openeds: ["1"],
+      //滚动条高度
+      scrollbarHeight: props.scrollbar_height
+    });
+
+    data.scrollbarHeight = computed(function(){
+      return props.scrollbar_height;
     });
 
     //找出对象中所有以id为变量名
@@ -85,7 +91,7 @@ export default {
     }
 
     //指定路由跳转
-    function goToRoute(path=''){
+    function goToRoute(path = "") {
       router.push(path);
     }
 
@@ -108,9 +114,8 @@ export default {
 <style scoped>
 .wrapper_sidBar {
   position: relative;
-  min-height: 93vh;
-  max-height: 93vh;
   overflow: auto;
+  height: 100%;
   min-width: 13vw;
   width: 13vw;
   border-right: 0.5px solid rgba(207, 207, 207, 0.2);

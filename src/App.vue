@@ -9,6 +9,8 @@
 <script>
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+// import { onMounted } from 'vue';
+// import useStore from 'vuex';
 
 export default {
   name: "App",
@@ -16,6 +18,9 @@ export default {
     Header,
     Footer,
   },
+  setup(){
+    
+  }
 };
 </script>
 

@@ -9,6 +9,8 @@ addColor(true)
 import '@/assets/font/font.css';
 //引入icon
 import '@/assets/icon/iconfont.css';
+//使用mock伪装服务
+import '@/mock/mockServe';
 
 const app = createApp(App); 
 
@@ -25,9 +27,11 @@ app.use(ElementPlus,{
 import router from './router'
 app.use(router);
 //注册组件
-import CScrollbar from 'c-scrollbar';
-app.use(CScrollbar)
-
+import CScrollbar from 'c-scrollbar'; //滚动条
+app.use(CScrollbar);
+//使用vuex
+import store from '@/store';
+app.use(store);
 
 app.mount('#app');
 

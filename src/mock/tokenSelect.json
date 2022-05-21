@@ -1,0 +1,44 @@
+{
+  "options":  [
+    {
+      "icon": "iconfont icon-jiaoyisuo",
+      "value": "BTC",
+      "label": "BTC"
+    },
+    {
+      "icon": "iconfont icon-jiaoyisuo",
+      "value": "ETH",
+      "label": "ETH"
+    },
+    {
+      "icon": "iconfont icon-jiaoyisuo",
+      "value": "XRP",
+      "label": "XRP"
+    },
+    {
+      "icon": "iconfont icon-jiaoyisuo",
+      "value": "SOL",
+      "label": "SOL"
+    },
+    {
+      "icon": "iconfont icon-jiaoyisuo",
+      "value": "DOT",
+      "label": "DOT"
+    },
+    {
+      "icon": "iconfont icon-jiaoyisuo",
+      "value": "ADA",
+      "label": "ADA"
+    },
+    {
+      "icon": "iconfont icon-jiaoyisuo",
+      "value": "UNI",
+      "label": "UNI"
+    },
+    {
+      "icon": "iconfont icon-jiaoyisuo",
+      "value": "BNB",
+      "label": "BNB"
+    }
+  ]
+}
