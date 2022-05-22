@@ -19,6 +19,7 @@
       />
     </div>
     <LargeScaleAreaChart :date="date" :serise="serise" />
+    <PieChart/>
   </div>
 </template>
 
@@ -27,64 +28,56 @@ import { onMounted, reactive, ref, toRaw, watch } from "vue";
 import { useStore } from "vuex";
 import Select from "@/components/Select";
 import LargeScaleAreaChart from "@/components/Echarts/LargeScaleAreaChart";
-import { randomColor } from "@/utils";
+import { Partten } from "@/partten";
+import PieChart from "@/components/Echarts/PieChart";
 
 export default {
   name: "ContractInventory",
   components: {
     LargeScaleAreaChart,
     KSelect: Select,
-  },
+    PieChart
+},
   setup() {
     let store = useStore();
-
-    //交易所选择器列表
-    let exchangeOptions = ref([]);
-    //币种选择器列表
-    let tokenOptions = ref([]);
     //日期
     let date = ref([]);
-    //显示数据
+    //持仓数据
     let data = ref([]);
-    //serise数据
+    //serise
     let serise = ref([]);
 
-    //组件创建完毕后，请求服务器获取默认币中持仓量
+    //交易所选择器配置
     let exchangeSelect = reactive({
       title: "交易所",
       multiple: true,
       placeholder: "交易所",
       value: ["Binance", "FTX"],
       //通过vuex获取到数据
-      options: exchangeOptions,
-      change: exchangeChange,
+      options: Partten.exchangeSelect,
+      change: function (changeValue) {
+        exchangeSelect.value = changeValue;
+      },
     });
 
-    //exchange select 组件的回调函数 列表发生改变时候触发
-    function exchangeChange(changeValue) {
-      exchangeSelect.value = changeValue;
-    }
-
+    //token选择器配置
     let tokenSelect = reactive({
       title: "币种",
       multiple: false,
       placeholder: "币种",
       value: "BTC",
-      options: tokenOptions,
-      change: tokenChange,
+      options: Partten.tokenSelect,
+      change: function(changeValue) {
+        tokenSelect.value = changeValue;
+      },
     });
-
-    //token select 组件的回调函数 列表发生改变时候触发
-    function tokenChange(changeValue) {
-      tokenSelect.value = changeValue;
-    }
 
     //加工图表的Series数据
     function seriseFactory() {
-        // toRaw(props.dat).openInterest
-      for (let exchangeProxy of data) {
+      // toRaw(props.dat).openInterest
+      serise.value = [];
+      for (let exchangeProxy of data.value) {
         let exchange = toRaw(exchangeProxy);
-        console.log("exchange", exchange);
         let option = {
           name: exchange.exchangeName,
           type: "line",
@@ -93,7 +86,7 @@ export default {
           //平滑
           smooth: true,
           itemStyle: {
-            color: randomColor(),
+            color: Partten.tokeneChartsColor[exchange.exchangeName],
           },
           // areaStyle: {
           //   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -111,7 +104,6 @@ export default {
         };
         serise.value.push(option);
       }
-      return serise;
     }
 
     //监测exchange select选择器变化
@@ -119,15 +111,13 @@ export default {
       () => exchangeSelect.value,
       () => {
         //监测到交易所选项发生改变时，过滤没有选中的交易所持仓量数据
-        //传送给echarts图表该展示那些交易所
         data.value = toRaw(
           store.getters["contractInventory/getDetailExchangeContractInventor"](
             exchangeSelect.value
           )
         );
-
         //调用serise工厂加工显示数据
-        serise.value = seriseFactory();
+        seriseFactory();
       },
       {
         deep: true,
@@ -142,19 +132,23 @@ export default {
         store
           .dispatch("contractInventory/getContractInventory", newV)
           .then(() => {
-            date.value =
-              store.getters["contractInventory/getContractInventorDate"];
-            data.value = store.getters[
-              "contractInventory/getDetailExchangeContractInventor"
-            ](exchangeSelect.value);
+            //时间
+            date.value = toRaw(
+              store.getters["contractInventory/getContractInventorDate"]
+            );
+            //持仓
+            data.value = toRaw(
+              store.getters[
+                "contractInventory/getDetailExchangeContractInventor"
+              ](exchangeSelect.value)
+            );
           })
           .catch((error) => {
             console.log(error.message);
           });
 
-        //store持仓量数据已经被更新
         //调用serise工厂加工显示数据
-        serise.value = seriseFactory();
+        seriseFactory();
       },
       {
         deep: true,
@@ -163,28 +157,6 @@ export default {
 
     //组件加载完毕 获取具体交易所的币种持仓量
     onMounted(() => {
-      //派发请求，获取exchange select选择器的列表
-      store
-        .dispatch("contractInventory/getExchangeSelect")
-        .then(() => {
-          exchangeOptions.value = toRaw(
-            store.state.contractInventory.exchangeSelect
-          );
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-
-      //派发请求，获取token select选择器的列表
-      store
-        .dispatch("contractInventory/getTokenSelect")
-        .then(() => {
-          tokenOptions.value = toRaw(store.state.contractInventory.tokenSelect);
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
-
       //派发请求，获取某一币种的持仓数据
       store
         .dispatch("contractInventory/getContractInventory", tokenSelect.value)
@@ -199,7 +171,8 @@ export default {
               "contractInventory/getDetailExchangeContractInventor"
             ](exchangeSelect.value)
           );
-          console.log("测试结果", date.value, data.value);
+
+          seriseFactory();
         })
         .catch((error) => {
           console.log(error.message);

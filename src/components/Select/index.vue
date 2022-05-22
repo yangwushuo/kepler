@@ -39,11 +39,13 @@
 </template>
 
 <script>
-import {reactive, toRefs,toRaw, watch, computed} from "vue";
+import {reactive, toRefs,} from "vue";
 export default {
   name: "Select",
   props: ["multiple", "placeholder", "title", "change", "value","options"],
   setup(props) {
+
+    console.log(props);
     let selectOptions = reactive({
       //加载提示开关
       loadingOpen: false,
@@ -56,13 +58,8 @@ export default {
       //默认选择
       value: props.value, 
       //数据
-      options: toRaw(props.options),
+      options: props.options,
     });
-
-    //为数据创建计算属性，如果props.options发生改变则返回新数值并渲染页面
-    selectOptions.options = computed(function(){
-      return toRaw(props.options);
-    })
 
     return {
       ...toRefs(selectOptions),

@@ -1,3 +1,4 @@
+//交易所侧栏
 export const exchangeSideBar = {
   title: "交易所数据",
   oneItems: [
@@ -155,3 +156,99 @@ export const exchangeSideBar = {
     }, 
   ]
 };
+
+//交易所选择器
+export const exchangeSelect = [
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "Binance",
+    "label": "Binance"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "FTX",
+    "label": "FTX"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "Bitget",
+    "label": "Bitget"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "Bybit",
+    "label": "Bybit"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "Deribit",
+    "label": "Deribit"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "Bitfinex",
+    "label": "Bitfinex"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "Okex",
+    "label": "Okex"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "Bitmex",
+    "label": "Bitmex"
+  }
+]
+
+//币种选择器
+export const tokenSelect = [
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "BTC",
+    "label": "BTC"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "ETH",
+    "label": "ETH"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "XRP",
+    "label": "XRP"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "SOL",
+    "label": "SOL"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "DOT",
+    "label": "DOT"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "ADA",
+    "label": "ADA"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "UNI",
+    "label": "UNI"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "BNB",
+    "label": "BNB"
+  }
+]
+
+//币种颜色
+export const tokeneChartsColor = {
+  Binance: '#d5ff00',
+  FTX: '#00ff40',
+  Bitget: '#00ddff',
+  Okex : '#00eaff'
+}

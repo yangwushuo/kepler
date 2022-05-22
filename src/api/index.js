@@ -11,19 +11,3 @@ export const reqContractInventory = (token) => {
     method: 'get',
   })
 };
-
-//请求获取交易所多选框
-export const reqExchangeSelect = () => {
-  return mockRequest({
-    url: '/getExchangeSelect',
-    method: 'get',
-  })
-};
-
-//请求获取Token多选框
-export const reqTokenSelect = () => {
-  return mockRequest({
-    url: '/getTokenSelect',
-    method: 'get',
-  })
-};

@@ -7,13 +7,12 @@ import * as echarts from "echarts";
 import { onMounted, ref, toRaw, watch } from "vue";
 export default {
   name: "LargeScaleAreaChart",
-  props: ["date", "data","showRule"],
+  props: ["date", "serise"],
   setup(props) {
     let largeScaleAreaChart = ref(null);
 
     let date = [];
     //参数
-    let result = [];
     let option = {
       //数据提示框
       tooltip: {
@@ -109,7 +108,7 @@ export default {
         },
       ],
       //数据区域
-      series: result,
+      series: [],
       //水印设置
       graphic: [
         {
@@ -134,12 +133,12 @@ export default {
     let myChart = null;
 
     watch(
-      () => props.data,
+      [() => props.serise, () => props.date],
       () => {
-        // console.log("=========================",toRaw(props.date),toRaw(props.data[0]).openInterest);
         option.xAxis.data = toRaw(props.date);
-        option.series = getSeries();
+        option.series = toRaw(props.serise);
         //更新图标
+        myChart.clear();
         echartsApp();
       },
       {
@@ -157,7 +156,6 @@ export default {
       });
     }
 
-    
     onMounted(() => {
       myChart = echarts.init(largeScaleAreaChart.value);
 

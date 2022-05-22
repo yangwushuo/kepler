@@ -9,43 +9,17 @@ const actions = {
       return Promise.reject(new Error("request contractInventory failed"))
     }
   },
-  async getExchangeSelect({commit}){
-    let result = await reqExchangeSelect();
-    if(result.code == 200){
-      commit('GETEXCHANGESELECT',result.data);
-    }else{
-      return Promise.reject(new Error("request exchange select failed"))
-    }
-  },
-  async getTokenSelect({commit}){
-    let result = await reqTokenSelect();
-    if(result.code == 200){
-      commit('GETTOKENSELECT',result.data);
-    }else{
-      return Promise.reject(new Error("request token select failed"))
-    }
-  },
 };
 
 const mutations = {
   GETCONTRACTINVENTORY(state, contractInventory){
     state.contractInventory = contractInventory.data;
   },
-  GETEXCHANGESELECT(state, exchangeSelect){
-    state.exchangeSelect = exchangeSelect.options;
-  },
-  GETTOKENSELECT(state, tokenSelect){
-    state.tokenSelect = tokenSelect.options;
-  },
 }
 
 const state = {
   //持仓量
   contractInventory: {},
-  //交易所选择框
-  exchangeSelect: [],
-  //币种选择框
-  tokenSelect: [],
 }
 
 const getters = {
