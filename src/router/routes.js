@@ -1,6 +1,7 @@
 const Index = () => import('@/views/Index'); //首页
 const Login = () => import('@/views/Login'); //登录页面
 const Register = () => import('@/views/Register'); //注册界面
+const TradAccount = () => import('@/views/TrandAccount') //交易账户页面
 
 export default [
 
@@ -33,4 +34,10 @@ export default [
     
     ]
   },  
+  //交易账户
+  {
+    path: '/tradAccount',
+    name: 'tradAccount',
+    component: TradAccount,
+  }
 ]

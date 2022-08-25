@@ -11,7 +11,7 @@
               <li class="header_nav_item"><a>首页</a></li>
               <li class="header_nav_item"><a>市场</a></li>
               <li class="header_nav_item"><a>实盘广场</a></li>
-              <li class="header_nav_item"><a>账户</a></li>
+              <li class="header_nav_item" @click="gotoRoute('/tradAccount')"><a>账户</a></li>
             </ul>
           </nav>
         </div>
