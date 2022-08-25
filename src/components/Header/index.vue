@@ -3,43 +3,77 @@
     <header class="site-header">
       <div class="wrapper site-header__wrapper">
         <div class="site-header__start">
-          <span class="brand">Kepler</span>
+          <span class="brand" @click="gotoRoute('/index')">QING PU</span>
         </div>
         <div class="site-header__middle">
-          <nav class="nav">
-            <ul class="nav__wrapper">
-              <li class="nav__item">
-                <a href="javascript:void(0);" @click="gotoRoute('/home')">首页</a>
-              </li>
-              <li class="nav__item">
-                <a
-                  href="javascript:void(0);"
-                  @click="gotoRoute('/exchangeData')"
-                  >交易所数据</a
-                >
-              </li>
-              <li class="nav__item">
-                <a href="javascript:void(0);" @click="gotoRoute">链上数据</a>
-              </li>
-              <li class="nav__item">
-                <a href="javascript:void(0);" @click="gotoRoute">NFT藏品</a>
-              </li>
-              <li class="nav__item">
-                <a href="javascript:void(0);" @click="gotoRoute">市场指数</a>
-              </li>
-              <li class="nav__item">
-                <a href="javascript:void(0);" @click="gotoRoute">动态</a>
-              </li>
+          <nav class="header_nav">
+            <ul class="header_nav_list">
+              <li class="header_nav_item"><a>首页</a></li>
+              <li class="header_nav_item"><a>市场</a></li>
+              <li class="header_nav_item"><a>实盘广场</a></li>
+              <li class="header_nav_item"><a>账户</a></li>
             </ul>
           </nav>
         </div>
-        <div class="site-header__end">
-          <el-button class="loginAndRegister" size="large" round
-            >登录</el-button
-          >
-          <el-button class="loginAndRegister" size="large" round
-            >注册</el-button
-          >
+        <div class="site-header__end" ref="endRef">
+          <div v-show="!account.username">
+            <el-button
+              class="loginAndRegister"
+              size="large"
+              round
+              @click="doLogin"
+              >登录</el-button
+            >
+            <el-button
+              class="loginAndRegister"
+              size="large"
+              round
+              @click="doReg"
+              >注册</el-button
+            >
+          </div>
+          <div v-show="account.username" class="person">
+            <el-popover
+              placement="bottom"
+              trigger="hover"
+              offset="10"
+              width="150"
+            >
+              <template #reference>
+                <div class="person_item">
+                  <el-avatar :src="account.portraitImage" />
+                </div>
+              </template>
+              <el-space direction="vertical" fill="true">
+                <div v-for="(item, key) in portraitItem" :key="key">
+                  <el-button
+                    id="elButton"
+                    :size="item.size"
+                    :type="item.type"
+                    :link="item.link"
+                    @click="
+                      typeof item.click == string
+                        ? gotoRoute(item.click)
+                        : item.click()
+                    "
+                    >{{ item.name }}</el-button
+                  >
+                </div>
+              </el-space>
+            </el-popover>
+            <el-popover
+              placement="bottom"
+              trigger="hover"
+              offset="10"
+              width="150"
+            >
+              <template #reference>
+                <div class="person_item">
+                  <el-icon><More /></el-icon>
+                </div>
+              </template>
+            </el-popover>
+          </div>
         </div>
       </div>
     </header>
@@ -47,19 +81,133 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
+import { onMounted, reactive, computed, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { ElLoading, ElMessage } from "element-plus";
+import { reqLogout } from "@/api";
+import { statusCode } from "@/utils";
 export default {
   name: "Header",
   setup() {
-    
     const router = useRouter();
+    const store = useStore();
 
+    var portraitItem = reactive([
+      {
+        name: "个人中心",
+        size: "default",
+        type: "plain",
+        click: "/",
+      },
+      {
+        name: "退出登录",
+        size: "default",
+        type: "plain",
+        click: function logout() {
+          reqLogout()
+            .then((res) => {
+              if (res.code == statusCode.SUCCESS.code) {
+                //清空用户信息
+                store.state.userInfoStore.userInfo.username = "";
+                store.state.userInfoStore.userPortraitImage = "";
+
+                //跳转到首页
+                router.push("/index");
+              } else {
+                return Promise.reject(new Error("退出登录失败"));
+              }
+            })
+            .catch((err) => {
+              errHint(err);
+            });
+        },
+      },
+    ]);
+
+    var endRef = ref(null);
+
+    var account = reactive({
+      username: "",
+      portraitImage: "",
+    });
+
+    //无操作
     function gotoRoute(path = "") {
       router.push(path);
     }
 
+    //登录操作
+    function doLogin() {
+      router.push("/login");
+    }
+
+    //注册操作
+    function doReg() {
+      router.push("/reg");
+    }
+
+    function errHint(msg, time = 3000) {
+      return ElMessage({
+        showClose: true,
+        message: msg,
+        type: "error",
+        center: true,
+        effect: "dark",
+        description: "",
+        showIcon: true,
+        offset: 100,
+        duration: time,
+      });
+    }
+
+    account.username = computed(() => {
+      return store.state.userInfoStore.userInfo.username;
+    });
+
+    account.portraitImage = computed(() => {
+      return store.state.userInfoStore.userPortraitImage;
+    });
+
+    //创建之前
+    onMounted(() => {
+      var load = ElLoading.service({
+        target: endRef.value,
+        background:
+          document.documentElement.style.getPropertyValue("--mainbgcolor"),
+        spinner: "el-loading-spinner",
+      });
+      //申请获取用户信息(携带cookie)
+      store
+        .dispatch("userInfoStore/getUserInfo")
+        .then((res) => {
+          load.close();
+        })
+        .catch((err) => {
+          console.log(err);
+          store.state.userInfoStore.userInfo.username = "";
+          load.close();
+        });
+      //申请获取用户头像
+      store
+        .dispatch("userInfoStore/getUserPortraitImage")
+        .then((err) => {
+          load.close();
+        })
+        .catch((err) => {
+          console.log(err);
+          store.state.userInfoStore.userPortraitImage = "";
+          load.close();
+        });
+    });
+
     return {
+      endRef,
+      portraitItem,
       gotoRoute,
+      doLogin,
+      doReg,
+      account,
     };
   },
 };
@@ -70,22 +218,25 @@ export default {
   /* position: relative; */
   background-color: var(--mainbgcolor);
   border-bottom: 0.5px solid rgba(207, 207, 207, 0.2);
+  flex: 0 0 auto;
 }
 
 .wrapper {
-  max-width: 1140px;
+  max-width: 1500px;
   padding-left: 1rem;
   padding-right: 1rem;
   margin-left: auto;
   margin-right: auto;
-  height: 7vh;
+  height: 5vh;
 }
 
 /* logo样式 */
 .brand {
+  font-family: "Bebas Neue";
   font-weight: bold;
   font-size: 30px;
   color: white;
+  cursor: pointer;
 }
 
 .site-header__wrapper {
@@ -103,11 +254,16 @@ export default {
   }
 }
 
+.site-header__start {
+  width: 200px;
+}
+
 .site-header__middle {
   font-size: 18px;
 }
 
 .site-header__end {
+  width: 200px;
   font-size: 18px;
 }
 
@@ -121,45 +277,32 @@ export default {
   }
 }
 
-/* @media (max-width: 659px) {
-  .site-header__end { 
-    padding-right: 4rem;
-  }
+.header_nav {
+  width: 350px;
+  height: 38px;
+  border-radius: 19px;
+  background-color: #1d1e20;
+  line-height: 38px;
+  text-align: center;
 }
 
-@media (max-width: 659px) {
-  .nav__wrapper {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    left: 0;
-    z-index: -1;
-    background-color: #d9f0f7;
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-100%);
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  }
-  .nav__wrapper.active {
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0);
-  }
-} */
-
-.nav__item a {
-  display: block;
-  padding: 1.5rem 1rem;
-  font-size: 16px;
-  text-decoration: none;
+.header_nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
-.nav__item a:hover {
-  color: var(--sideBarItemActiveFontColor);
+.header_nav a {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 18px;
+  color: #737476;
+  display: inline;
+  cursor: pointer;
 }
 
-.nav__item a:focus {
-  color: var(--sideBarItemActiveFontColor);
+.header_nav a:hover {
+  color: white;
 }
 
 .el-button {
@@ -175,5 +318,25 @@ export default {
 
 .el-button:focus {
   color: black !important;
+}
+
+.person {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2vh;
+  color: white;
+}
+
+.person .person_item {
+  margin-left: 10px;
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#elButton {
+  width: 150px;
 }
 </style>

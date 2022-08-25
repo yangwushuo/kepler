@@ -3,12 +3,10 @@
     <footer class="site-footer">
       <div class="wrapper site-footer__wrapper">
         <div class="site-footer__start">
-          <span class="brand">Kepler</span>
+          <span class="brand">QING PU</span>
         </div>
 
-        <div class="site-footer__middle">
-
-        </div>
+        <div class="site-footer__middle"></div>
 
         <div class="site-footer__end">
           <span class="iconfont icon-tuite"></span>
@@ -27,15 +25,15 @@ export default {
 </script>
 
 <style scoped>
-
-.site-footer{
+.site-footer {
   /*  */
+  background-color: var(--mainbgcolor);
   border-top: 0.5px solid rgba(207, 207, 207, 0.2);
   position: relative;
 }
 
 .wrapper {
-  max-width: 1140px;
+  max-width: 1500px;
   padding-left: 1rem;
   padding-right: 1rem;
   margin-left: auto;
@@ -54,21 +52,29 @@ export default {
 
 /* logo样式 */
 .brand {
+  font-family: "Bebas Neue";
   font-weight: bold;
   font-size: 30px;
   color: white;
 }
 
-.site-footer__end span{
-  padding-right: 1rem;
+.site-footer__start span {
+  width: 200px;
+}
+
+.site-footer__middle span {
+}
+
+.site-footer__end span {
   font-size: 2rem;
+  width: 200px;
 }
 
-.icon-tuite{
-  color: #1CA2F2;
+.icon-tuite {
+  color: #1ca2f2;
 }
 
-.icon-telegram{
-  color: #25A4E2;
+.icon-telegram {
+  color: #25a4e2;
 }
 </style>

@@ -1,8 +1,8 @@
 import { createStore } from "vuex";
-import contractInventory from "./contractInventory";
+import userInfoStore from "./userInfoStore";
 
 export default createStore({
   modules: {
-    contractInventory
+    userInfoStore
   }
 })

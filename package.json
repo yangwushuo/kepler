@@ -8,17 +8,25 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.9",
+    "@fontsource/bebas-neue": "^4.5.8",
+    "@namchee/vue-ztext": "^1.0.0",
+    "async-validator": "^4.2.5",
     "axios": "^0.27.2",
     "c-scrollbar": "^1.0.2",
     "core-js": "^3.8.3",
     "echarts": "^5.3.2",
     "element-plus": "^2.2.0",
     "element-resize-detector": "^1.2.4",
+    "floating-vue": "^2.0.0-beta.19",
+    "font-awesome-animation": "^1.1.1",
+    "lodash": "^4.17.21",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.15",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "vux": "^2.11.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

@@ -10,6 +10,8 @@ import 'nprogress/nprogress.css'
 const requests = axios.create({
   //配置对象
   //基础路径，发请求的时候，路径前面会添加基本路径
+  // `withCredentials` 表示跨域请求时是否需要使用凭证
+  withCredentials: true, // default
   baseURL: '/api',
   //请求超时
   timeout: 50000,
@@ -20,7 +22,7 @@ requests.interceptors.request.use((config) => {
   //config 参数包含当前请求的一些配置 比如: hea der
 
   //发送请求时让进度条开始
-  nprogress.start();
+  // nprogress.start();
 
   return config;
 })
@@ -30,13 +32,13 @@ requests.interceptors.response.use(
   (res) => {
     //响应成功调用此方法
     //接收响应时让进度条结束
-    nprogress.done();
+    // nprogress.done();
 
     return res.data;
   },
   (error) => {
     //响应失败调用此方法
-    console.log("request err:",error);
+    console.log("request err:", error);
     return Promise.reject(new Error('faile'));
   }
 )

@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3395519 */
-  src: url('iconfont.woff2?t=1652453083480') format('woff2'),
-       url('iconfont.woff?t=1652453083480') format('woff'),
-       url('iconfont.ttf?t=1652453083480') format('truetype');
+  src: url('iconfont.woff2?t=1661169598065') format('woff2'),
+       url('iconfont.woff?t=1661169598065') format('woff'),
+       url('iconfont.ttf?t=1661169598065') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,34 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-loading:before {
+  content: "\e632";
+}
+
+.icon-weixindenglu:before {
+  content: "\e638";
+}
+
+.icon-yanzhengma:before {
+  content: "\e614";
+}
+
+.icon-denglu1:before {
+  content: "\e66b";
+}
+
+.icon-mima:before {
+  content: "\e605";
+}
+
+.icon-denglu:before {
+  content: "\e611";
+}
+
+.icon-zhucehuiyuan:before {
+  content: "\e635";
 }
 
 .icon-telegram:before {

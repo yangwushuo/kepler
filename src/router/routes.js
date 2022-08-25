@@ -1,44 +1,36 @@
-const Home = () => import('@/views/Home'); //首页
-const Exchange = () => import('@/views/Exchange');  //交易所
-const ContractInventory = () => import('@/views/ContractInventory'); //合约持仓量
-const OptionInventory = () => import('@/views/OptionInventory'); //期权持仓量
+const Index = () => import('@/views/Index'); //首页
+const Login = () => import('@/views/Login'); //登录页面
+const Register = () => import('@/views/Register'); //注册界面
 
 export default [
 
   //首页
   {
-    path: '/home',
-    name: 'home',
-    component: Home
+    path: '/index',
+    name: 'index',
+    component: Index
   },
   //重定向，在项目跑起来的时候，访问/
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/index'
   },
-  //交易所
+  //登录界面
   {
-    path: '/exchangeData',
-    name: 'exchangeData',
-    component: Exchange,
+    path: '/login',
+    name: 'login',
+    component: Login,
     children: [
-      //默认合约持仓量
-      {
-        path: '',
-        redirect: '/exchangeData/contractInventory',
-      },  
-      //合约持仓量
-      {
-        path: 'contractInventory',
-        name: 'contractInventory',
-        component: ContractInventory,
-      },
-      //期权持仓量
-      {
-        path: 'optionsInventory',
-        name: 'optionsInventory',
-        component: OptionInventory,
-      },
+    
     ]
-  }, 
+  },
+  //注册界面
+  {
+    path: '/reg',
+    name: 'reg',
+    component: Register,
+    children: [
+    
+    ]
+  },  
 ]

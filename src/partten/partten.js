@@ -245,10 +245,72 @@ export const tokenSelect = [
   }
 ]
 
-//币种颜色
-export const tokeneChartsColor = {
-  Binance: '#d5ff00',
-  FTX: '#00ff40',
-  Bitget: '#00ddff',
-  Okex : '#00eaff'
+export const timeTypeSelect = [
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "5",
+    "label": "5分钟"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "15",
+    "label": "15分钟"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "30",
+    "label": "30分钟"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "1",
+    "label": "1小时"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "6",
+    "label": "4小时"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "2",
+    "label": "12小时"
+  },
+  {
+    "icon": "iconfont icon-jiaoyisuo",
+    "value": "8",
+    "label": "24小时"
+  }
+]
+
+//交易所标准颜色
+export const exchangeChartsColor = {
+  Binance: '#ff9100',
+  FTX: '#ff3d00',
+  Bitget: '#aa00ff',
+  Okex : '#fffde7',
+  Bybit: '#304ffe',
+  Bitmex: '#2962ff',
+  Huobi: '#0091ea',
+  Deribit: '#00b8d4',
+  Bitfinex: '#00bfa5',
+  Kraken: '#00c853',
+  Gate: '#64dd17',
+  Dydx: '#aeea00',
+  price: '#bdbdbd'
+}
+
+export const standardExchangeName = {
+  'binance': 'Binance',
+  'ftx': 'FTX',
+  'bybit': 'Bybit',
+  'okex': 'Okex',
+  'bitmex': 'Bitmex',
+  'huobi': 'Huobi',
+  'bitget': 'Bitget',
+  'deribit': 'Deribit',
+  'bitfinex': 'Bitfinex',
+  'kraken': 'Kraken',
+  'gate': 'Gate',
+  'dydx': 'Dydx',
 }

@@ -12,6 +12,7 @@ export default {
     let largeScaleAreaChart = ref(null);
 
     let date = [];
+
     //参数
     let option = {
       //数据提示框
@@ -61,14 +62,22 @@ export default {
         data: date,
       },
       //y轴
-      yAxis: {
-        type: "value",
-        //背景网格线
-        splitLine: {
-          show: false,
+      yAxis: [
+        {
+          type: "value",
+          //背景网格线
+          splitLine: {
+            show: false,
+          },
+          boundaryGap: [0, "100%"],
+          min: function (value) {
+            return value.min;
+          },
+          max: function (value) {
+            return value.max;
+          },
         },
-        boundaryGap: [0, "100%"],
-      },
+      ],
       //底部时间标记
       dataZoom: [
         {
@@ -130,6 +139,7 @@ export default {
         },
       ],
     };
+
     let myChart = null;
 
     watch(
@@ -137,8 +147,34 @@ export default {
       () => {
         option.xAxis.data = toRaw(props.date);
         option.series = toRaw(props.serise);
-        //更新图标
-        myChart.clear();
+        console.log(option.series);
+        option.yAxis = (() => {
+          let yAxisList = [];
+          for (let eoi of props.serise) {
+            yAxisList.push({
+              type: "value",
+              show: false,
+              name: eoi.name,
+              //背景网格线
+              splitLine: {
+                show: false,
+              },
+              boundaryGap: [0, "100%"],
+              min: (value) => {
+                // 百位起最小值向下取整
+                return Math.floor(value.min);
+              },
+              
+            });
+          }
+          return yAxisList;
+        })();
+        //修改水印文字
+        (option.graphic[0].style.text = [
+          "Kepler" + ":" + props.serise[0].tokenName,
+        ].join("")),
+          //更新图标
+          myChart.clear();
         echartsApp();
       },
       {

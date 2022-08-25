@@ -1,0 +1,7 @@
+.el-loading-spinner{
+  /*这个是自己想设置的 gif 加载动图*/
+  background-image:url('../img/three-dots.svg');
+  background-repeat: no-repeat;
+  background-size: 20%;
+  background-position:center;
+}

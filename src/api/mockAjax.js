@@ -5,6 +5,9 @@ import nprogress from "nprogress";
 import "nprogress/nprogress.css";
 //底下的代码也是创建axios实例
 let requests = axios.create({
+  headers:{
+
+  },
   //基础路径
   baseURL: "/mock",
   //请求不能超过5S
