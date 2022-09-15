@@ -34,6 +34,7 @@ export default {
 
 .wrapper {
   max-width: 1500px;
+  height: 5vh;
   padding-left: 1rem;
   padding-right: 1rem;
   margin-left: auto;

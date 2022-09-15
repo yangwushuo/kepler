@@ -8,10 +8,14 @@
         <div class="site-header__middle">
           <nav class="header_nav">
             <ul class="header_nav_list">
-              <li class="header_nav_item"><a>首页</a></li>
+              <li class="header_nav_item" @click="gotoRoute('/index')">
+                <a>首页</a>
+              </li>
               <li class="header_nav_item"><a>市场</a></li>
               <li class="header_nav_item"><a>实盘广场</a></li>
-              <li class="header_nav_item" @click="gotoRoute('/tradAccount')"><a>账户</a></li>
+              <li class="header_nav_item" @click="gotoRoute('/tradAccount')">
+                <a>账户</a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -72,6 +76,22 @@
                   <el-icon><More /></el-icon>
                 </div>
               </template>
+              <el-space direction="vertical" fill="true">
+                <div v-for="(item, key) in moreItem" :key="key">
+                  <el-button
+                    id="elButton"
+                    :size="item.size"
+                    :type="item.type"
+                    :link="item.link"
+                    @click="
+                      typeof item.click == string
+                        ? gotoRoute(item.click)
+                        : item.click()
+                    "
+                    >{{ item.name }}</el-button
+                  >
+                </div>
+              </el-space>
             </el-popover>
           </div>
         </div>
@@ -84,7 +104,7 @@
 import { onMounted, reactive, computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { ElLoading, ElMessage } from "element-plus";
+import { ElMessage } from "element-plus";
 import { reqLogout } from "@/api";
 import { statusCode } from "@/utils";
 export default {
@@ -98,7 +118,10 @@ export default {
         name: "个人中心",
         size: "default",
         type: "plain",
-        click: "/",
+        click: function personalCenter() {
+          //跳转个人中心页面
+          router.push("/personalCenter");
+        },
       },
       {
         name: "退出登录",
@@ -108,20 +131,36 @@ export default {
           reqLogout()
             .then((res) => {
               if (res.code == statusCode.SUCCESS.code) {
-                //清空用户信息
-                store.state.userInfoStore.userInfo.username = "";
-                store.state.userInfoStore.userPortraitImage = "";
-
-                //跳转到首页
-                router.push("/index");
-              } else {
-                return Promise.reject(new Error("退出登录失败"));
+                //
               }
             })
             .catch((err) => {
               errHint(err);
             });
+
+          //清空用户信息
+          store.state.userInfoStore.userInfo = {};
+          store.state.userInfoStore.userPortraitImage = "";
+          //清楚本地token
+          localStorage.removeItem("qp-token");
+          //跳转到首页
+          router.push("/index");
         },
+      },
+    ]);
+
+    var moreItem = reactive([
+      {
+        name: "教程",
+        size: "default",
+        type: "plain",
+        click: "/",
+      },
+      {
+        name: "客服",
+        size: "default",
+        type: "plain",
+        click: "/",
       },
     ]);
 
@@ -170,40 +209,12 @@ export default {
     });
 
     //创建之前
-    onMounted(() => {
-      var load = ElLoading.service({
-        target: endRef.value,
-        background:
-          document.documentElement.style.getPropertyValue("--mainbgcolor"),
-        spinner: "el-loading-spinner",
-      });
-      //申请获取用户信息(携带cookie)
-      store
-        .dispatch("userInfoStore/getUserInfo")
-        .then((res) => {
-          load.close();
-        })
-        .catch((err) => {
-          console.log(err);
-          store.state.userInfoStore.userInfo.username = "";
-          load.close();
-        });
-      //申请获取用户头像
-      store
-        .dispatch("userInfoStore/getUserPortraitImage")
-        .then((err) => {
-          load.close();
-        })
-        .catch((err) => {
-          console.log(err);
-          store.state.userInfoStore.userPortraitImage = "";
-          load.close();
-        });
-    });
+    onMounted(() => {});
 
     return {
       endRef,
       portraitItem,
+      moreItem,
       gotoRoute,
       doLogin,
       doReg,
@@ -255,11 +266,13 @@ export default {
 }
 
 .site-header__start {
-  width: 200px;
+  width: 100px;
 }
 
 .site-header__middle {
   font-size: 18px;
+  margin-left: auto;
+  margin-right: 10px;
 }
 
 .site-header__end {
@@ -322,7 +335,7 @@ export default {
 
 .person {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
   font-size: 2vh;
   color: white;

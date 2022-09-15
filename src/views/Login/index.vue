@@ -58,7 +58,7 @@
             />
           </div>
           <div class="captcha_img" ref="captchaImgRef">
-              <img  @click="getCaptcha" :src="data.captchaImg"  />
+            <img @click="getCaptcha" :src="data.captchaImg" />
           </div>
         </div>
 
@@ -97,8 +97,8 @@
 import { reqCaptcha, reqLogin } from "@/api";
 import { reactive, onMounted, inject, ref } from "vue";
 import { useRouter } from "vue-router";
-import { ElMessage,ElLoading } from "element-plus";
-import _ from "lodash";
+import { ElMessage, ElLoading } from "element-plus";
+import _, { chain } from "lodash";
 import { statusCode } from "@/utils";
 import { useStore } from "vuex";
 
@@ -132,6 +132,7 @@ export default {
     var captchaImgRef = ref(null);
 
     var usernameHint = null;
+    var captchaHint = null;
 
     const store = useStore();
 
@@ -142,8 +143,8 @@ export default {
       //加载loading
       var load = ElLoading.service({
         target: captchaImgRef.value,
-        background: dc.getPropertyValue('--mainbgcolor'),
-        spinner: 'el-loading-spinner',
+        background: dc.getPropertyValue("--mainbgcolor"),
+        spinner: "el-loading-spinner",
       });
       reqCaptcha()
         .then((res) => {
@@ -162,26 +163,37 @@ export default {
     }
 
     //进行登录操作
-    function doLogin() {
-      //再次校验账号
-      if (handlerUsername()) {
+    async function doLogin() {
+      //再次校验账号 //校验验证码
+      if (handlerUsername() && checkCaptcha()) {
         account.rm ? (account.rm = "true") : (account.rm = "false");
-        reqLogin(account)
-          .then((res) => {
-            if (res.code == statusCode.SUCCESS.code) {
-              //获取用户信息
-              store.dispatch("userInfoStore/getUserInfo");
+        try {
+          var res = await reqLogin(account);
+          if (res.code == statusCode.SUCCESS.code) {
+            //将token保存到本地
+            //获取用户信息
+            try {
+              await store.dispatch("userInfoStore/getUserInfo");
               //获取用户头像信息
-              store.dispatch("userInfoStore/getUserPortraitImage");
+              await store.dispatch("userInfoStore/getUserPortraitImage");
               //跳转到首页
-              router.push("/index");
-            } else{
-              errHint(res.msg);
+              //获取路由是否需要跳转
+              var redirect = router.currentRoute.value.query.redirect;
+              if (redirect) {
+                router.push(redirect);
+              } else {
+                router.push("/index");
+              }
+            } catch (error) {
+              console.log(error);
             }
-          })
-          .catch(() => {
-            errHint("登录失败");
-          });
+          } else {
+            errHint(res.msg);
+          }
+        } catch (err) {
+          console.log(err);
+          errHint("登录失败");
+        }
       }
     }
 
@@ -190,10 +202,28 @@ export default {
       router.push("/reg");
     }
 
+    //校验验证码
+    function checkCaptcha(){
+      var result = false;
+      if((_.isEqual(account.captcha,"") || account.captcha.length != 6)){
+        captchaHint = errHint("请输入规范验证码");
+        captchaRef.value.style.boxShadow = warn;
+        return result;
+      }else{
+        if(captchaHint){
+          captchaHint.close();
+          captchaHint = null;
+        }
+        captchaRef.value.style.boxShadow = "";
+        result = true;
+        return result;
+      }
+    }
+
     //校验账号
     function handlerUsername() {
       var result = false;
-      validator.validate({ email: account.username }, (errors, fields) => {
+      validator.validate({ email: account.username }, (errors) => {
         if (errors) {
           //校验不通过 弹窗提示错误
           if (!usernameHint) {
@@ -203,6 +233,19 @@ export default {
           usernameRef.value.style.boxShadow = warn;
           return;
         }
+
+        if(_.isEqual(account.username, "")){
+          //校验不通过 弹窗提示错误
+          if(!usernameHint){
+            usernameHint = errHint("账号输入错误");
+          }
+          //输入框红色警告
+          usernameRef.value.style.boxShadow = warn;
+          return;
+        }else{
+          result = true;
+        }
+
         // 校验通过
         // 输入框警告
         usernameRef.value.style.boxShadow = "";
@@ -250,7 +293,6 @@ export default {
 </script>
 
 <style scoped>
-
 .main {
   background-color: var(--mainbgcolor);
   position: relative;
@@ -266,7 +308,7 @@ export default {
   text-align: center;
   margin: auto;
   position: absolute;
-  top: -20%;
+  top: 0;
   left: 0;
   bottom: 0;
   right: 0;

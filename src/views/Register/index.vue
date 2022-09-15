@@ -98,7 +98,6 @@ import { ElMessage } from "element-plus";
 import _ from "lodash";
 import { reqEmailCaptcha, reqReg } from "@/api";
 import { statusCode } from "@/utils";
-import { timeouts } from "retry";
 export default {
   name: "Register",
   setup() {
@@ -141,6 +140,7 @@ export default {
     //校验账号
     function handlerUsername() {
       var result = false;
+
       validator.validate({ email: account.username }, (errors) => {
         if (errors) {
           //校验不通过 弹窗提示错误
@@ -153,12 +153,22 @@ export default {
         }
         // 校验通过
         // 输入框警告
+        if(_.isEqual(account.username, "")){
+          //校验不通过 弹窗提示错误
+          if(!hint.usernameHint){
+            hint.usernameHint = errHint("请输入正确邮箱");
+          }
+          //输入框红色警告
+          redWarn(usernameRef);
+          return;
+        }else{
+          result = true;
+        }
+
         hint.usernameHint && hint.usernameHint.close();
         hint.usernameHint = null;
         cancelRedWarn(usernameRef);
-        //消除弹窗
         
-        result = !_.isEqual(account.username, "");
       });
       return result;
     }
@@ -319,7 +329,7 @@ export default {
 .main {
   background-color: var(--mainbgcolor);
   position: relative;
-  height: 93vh;
+  height: 95vh;
 }
 
 #container-login {
@@ -331,7 +341,7 @@ export default {
   text-align: center;
   margin: auto;
   position: absolute;
-  top: -20%;
+  top: 0;
   left: 0;
   bottom: 0;
   right: 0;

@@ -4,9 +4,9 @@
       <div class="title">QING PU</div>
       <div class="sub_title">专业阅读交易账户</div>
       <div class="three_title">
-        <button class="button button--bestia" id="three_title_butt">
-          <div class="button__bg"></div>
-          <span style="font-family: 'draemH'; font-size: 20px">创建实盘</span>
+          <button class="button button--bestia" id="three_title_butt">
+            <div class="button__bg"></div>
+          <span style="font-family: 'draemH'; font-size: 20px" @click="createAccount">创建实盘</span>
         </button>
       </div>
     </div>
@@ -14,8 +14,45 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { ElMessage } from 'element-plus';
 export default {
   name: "Index",
+  setup(){
+
+    const route = useRouter();
+    const store = useStore();
+
+    function createAccount(){
+      //判断当前用户是否登录
+      if(store.state.userInfoStore.userInfo.username){
+        route.push('/tradAccount/add');
+      }else{
+        //提示用户登录
+        errHint('请先登录再创建');
+      }
+    }
+
+    //弹窗
+    function errHint(msg, time = 3000) {
+      return ElMessage({
+        showClose: true,
+        message: msg,
+        type: "error",
+        center: true,
+        effect: "dark",
+        description: "",
+        showIcon: true,
+        offset: 100,
+        duration: time,
+      });
+    }
+
+    return {
+      createAccount,
+    }
+  }
 };
 </script>
 

@@ -11,12 +11,16 @@ import "@fontsource/bebas-neue";
 import "font-awesome-animation/css/font-awesome-animation.min.css";
 //引入icon
 import '@/assets/icon/iconfont.css';
-//使用mock伪装服务
-import '@/mock/mockServe';
+import 'material-symbols';
+// //使用mock伪装服务
+// import '@/mock/mockServe';
 //引入loading
 import '@/assets/css/loading.css';
 //按钮css
 import '@/assets/css/buttons.css';
+import '@/assets/css/buttons1.css';
+import '@/assets/css/bttn.min.css';
+
 
 const app = createApp(App); 
 
@@ -29,11 +33,10 @@ for (const iconName in ElIcons) {
 //使用element
 import ElementPlus from 'element-plus';
 import 'element-plus/theme-chalk/index.css';
-import zhCn from 'element-plus/es/locale/lang/zh-cn';//ElementPlus 组件内部默认使用英语，使用中文语言
-app.use(ElementPlus,{
-  zhCn
-});
-
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+app.use(ElementPlus, {
+  locale: zhCn,
+})
 //路由使用
 import router from './router'
 app.use(router);
@@ -75,6 +78,8 @@ import FloatingVue from 'floating-vue'
 import 'floating-vue/dist/style.css'
 app.use(FloatingVue)
 
+import VuePluload from 'vue-plupload'
+app.use(VuePluload);
 
 app.mount('#app');
 
