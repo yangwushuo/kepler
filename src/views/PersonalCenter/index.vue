@@ -81,17 +81,10 @@ export default {
           name: "实盘信息",
           click: () => {
             navMenu.activeButton = '1';
-            router.push("/personalCenter/trandInfo");
+            router.push("/personalCenter/tradeInfo");
           },
         },
-        {
-          index: '2',
-          name: "实盘信息",
-          click: () => {
-            navMenu.activeButton = '2';
-            router.push("/personalCenter/trandInfo");
-          },
-        },
+      
       ],
     });
 

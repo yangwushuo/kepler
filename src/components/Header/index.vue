@@ -13,7 +13,7 @@
               </li>
               <li class="header_nav_item"><a>市场</a></li>
               <li class="header_nav_item"><a>实盘广场</a></li>
-              <li class="header_nav_item" @click="gotoRoute('/tradAccount')">
+              <li class="header_nav_item" @click="gotoRoute('/tradeAccount')">
                 <a>账户</a>
               </li>
             </ul>
@@ -136,15 +136,16 @@ export default {
             })
             .catch((err) => {
               errHint(err);
+            })
+            .finally(() => {
+              //清空用户信息
+              store.state.userInfoStore.userInfo = {};
+              store.state.userInfoStore.userPortraitImage = "";
+              //清楚本地token
+              localStorage.removeItem("qp-token");
+              //跳转到首页
+              router.push("/index");
             });
-
-          //清空用户信息
-          store.state.userInfoStore.userInfo = {};
-          store.state.userInfoStore.userPortraitImage = "";
-          //清楚本地token
-          localStorage.removeItem("qp-token");
-          //跳转到首页
-          router.push("/index");
         },
       },
     ]);

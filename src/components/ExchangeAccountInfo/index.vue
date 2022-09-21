@@ -28,7 +28,11 @@
             >
           </div>
           <div>
-            <el-popconfirm title="确认注销实盘?" :hide-icon="true">
+            <el-popconfirm
+              title="确认注销实盘?"
+              :hide-icon="true"
+              @confirm="confirmDelExAcc"
+            >
               <template #reference>
                 <el-button size="small" type="danger" round
                   ><el-icon><Remove /></el-icon>注销</el-button
@@ -48,7 +52,7 @@
       </el-descriptions-item>
       <el-descriptions-item label-align="center" span="2">
         <template #label> 账户展示: </template>
-        <div class="trand-ex-show">
+        <div class="trade-ex-show">
           <span>
             上线广场&nbsp;
             <el-switch v-model="exchangeAccountInfo.online" size="default" />
@@ -84,7 +88,7 @@
       </el-descriptions-item>
       <el-descriptions-item label-align="center" span="2">
         <template #label> 实盘展示信息: </template>
-        <div class="trand-ex-show">
+        <div class="trade-ex-show">
           <span>
             资金&nbsp;
             <el-switch v-model="exchangeAccountInfo.moneyShow" size="default" />
@@ -108,12 +112,17 @@
 
 <script>
 import { computed, ref } from "@vue/runtime-core";
+import { reqDelExchangeAccount } from "@/api";
+import { statusCode } from "@/utils";
+import { ElNotification } from "element-plus";
+import { useStore } from "vuex";
 export default {
   name: "ExchangeAccountInfo",
   props: {
     eai: Object,
   },
   setup(props) {
+    const store = useStore();
     var nickNameEditState = ref(false);
     var exchangeAccountInfo = computed(() => {
       return props.eai;
@@ -123,10 +132,36 @@ export default {
       nickNameEditState.value = !nickNameEditState.value;
     }
 
+    function confirmDelExAcc() {
+      reqDelExchangeAccount({ id: props.eai.exchangeAccountId })
+        .then((res) => {
+          if (res.code == statusCode.SUCCESS.code) {
+            notic("注销成功", null, "success");
+            store.dispatch("exchangeStore/getUserExchange");
+          } else {
+            notic("注销失败", null, "error");
+          }
+        })
+        .catch((err) => {
+          notic("注销失败", null, "error");
+        });
+    }
+
+    function notic(title, message, type, duration = 2000, offset = 100) {
+      return ElNotification({
+        title: title,
+        message: message,
+        offset: offset,
+        type: type,
+        duration: duration,
+      });
+    }
+
     return {
       nickNameEditState,
       exchangeAccountInfo,
       changeNickNameEditState,
+      confirmDelExAcc,
     };
   },
 };
@@ -170,12 +205,12 @@ export default {
   border-bottom: 1px rgba(150, 150, 150, 0.3) solid;
 }
 
-.info-wrapper .trand-ex-show {
+.info-wrapper .trade-ex-show {
   display: flex;
   justify-content: space-around;
 }
 
-.info-wrapper .trand-ex-show span {
+.info-wrapper .trade-ex-show span {
   display: flex;
   flex-direction: row;
   line-height: 32px;

@@ -1,11 +1,11 @@
 const Index = () => import('@/views/Index'); //首页
 const Login = () => import('@/views/Login'); //登录页面
 const Register = () => import('@/views/Register'); //注册界面
-const TradAccount = () => import('@/views/TrandAccount'); //交易账户页面
+const TradeAccount = () => import('@/views/TradeAccount'); //交易账户页面
 const AddAccount = () => import('@/views/AddAccount'); //添加账户页面
 const PersonalCenter = () => import('@/views/PersonalCenter'); //个人中心页面
 const AccountInfo = () => import('@/views/AccountInfo'); //个人信息
-const TrandAccountInfo = () => import('@/views/TrandAccountInfo'); //交易账户信息
+const TradeAccountInfo = () => import('@/views/TradeAccountInfo'); //交易账户信息
 
 export default [
 
@@ -34,9 +34,9 @@ export default [
   },
   //交易账户
   {
-    path: '/tradAccount',
-    name: 'tradAccount',
-    component: TradAccount,
+    path: '/tradeAccount',
+    name: 'tradeAccount',
+    component: TradeAccount,
     meta: {
       title: '交易账户',
       isAuth: true
@@ -69,8 +69,8 @@ export default [
         isAuth: true
       },
     }, {
-      path: 'trandInfo',
-      component: TrandAccountInfo,
+      path: 'tradeInfo',
+      component: TradeAccountInfo,
       meta: {
         index: '1',
         title: '交易账户信息',

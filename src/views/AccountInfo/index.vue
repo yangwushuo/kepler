@@ -34,26 +34,74 @@
       <el-descriptions-item>
         <template #label> 用户名# </template>
         <div class="item-content">
+          <span v-if="userNameEditState">{{ userInfo.username }}</span>
           <input
-            type="text"
+            v-if="!userNameEditState"
             :placeholder="userInfo.username"
             v-model="userInfo.username"
+            @blur="changeUserNameEditState"
           />
+          <span
+            style="font-size: 16px; color: #76b852; cursor: pointer"
+            class="material-symbols-outlined icon"
+            @click="changeUserNameEditState"
+            >edit_square</span
+          >
         </div>
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label> 邮箱 </template>
-        {{ userInfo.email }}
+        <span>{{ userInfo.email }}</span>
+        <span>
+          <el-dialog
+            v-model="emailDialogVisible"
+            :width="emailDialogSetting.width"
+            :align-center="emailDialogSetting.alignCenter"
+            :lock-scroll="emailDialogSetting.lockScroll"
+            :open-delay="emailDialogSetting.openDelay"
+            :close-delay="emailDialogSetting.closeDelay"
+            :custom-class="emailDialogSetting.customClass"
+            :show-close="emailDialogSetting.showClose"
+          >
+            <template #title>
+              <span style="color: #464646;font-family: 'drameH';font-size: 18px;">{{ emailDialogSetting.title }}</span>
+            </template>
+            <div>
+              <input type="text"/>
+            </div>
+            <template #footer>
+              <span class="dialog-footer">
+                <button class="button1  button1-pill button1-small button-tiny" @click="emailDialogVisible = false">取消</button>
+                <button class="button1 button1-primary button1-pill button1-small" @click="emailDialogVisible = false">确认</button>
+              </span>
+            </template>
+          </el-dialog>
+        </span>
+
+        <button
+          style="margin-left: 5px"
+          class="button1 button1-pill button1-caution button1-tiny"
+          @click="emailDialogVisible = true"
+        >
+          修改
+        </button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label> 简介# </template>
         <div class="item-content">
+          <span v-if="introductionEditState">{{ userInfo.introduction }}</span>
           <input
-            type="text"
-            :placeholder="userInfo.introduction"
+            v-if="!introductionEditState"
             v-model="userInfo.introduction"
-            maxlength="128"
+            :placeholder="userInfo.introduction"
+            @blur="changeIntroductionEditState"
           />
+          <span
+            style="font-size: 16px; color: #76b852; cursor: pointer"
+            class="material-symbols-outlined icon"
+            @click="changeIntroductionEditState"
+            >edit_square</span
+          >
         </div>
       </el-descriptions-item>
       <el-descriptions-item>
@@ -123,7 +171,6 @@ import { ElNotification } from "element-plus";
 import plupload from "plupload";
 import { reqUpUserInfo } from "@/api";
 import { statusCode } from "@/utils";
-import { toReactive } from "@vueuse/core";
 export default {
   name: "AccountInfo",
   setup() {
@@ -158,10 +205,25 @@ export default {
     var uploadRef = ref(null);
     var portraitImgRef = ref(null);
 
+    var userNameEditState = ref(true);
+    var introductionEditState = ref(true);
+    var emailDialogVisible = ref(false);
+
+    var emailDialogSetting = reactive({
+      title: "请输入新邮箱",
+      lockScroll: false,
+      width: "20%",
+      openDelay: 200,
+      closeDelay: 200,
+      alignCenter: false,
+      customClass: "email-dialog",
+      showClose: false,
+    });
+
     //获取用户信息sex
     var userInfo = computed(() => {
       var date = store.state.userInfoStore.userInfo;
-      return toReactive({
+      return {
         id: date.id,
         email: date.email,
         username: date.username,
@@ -171,7 +233,7 @@ export default {
         province: date.province ? date.province + "" : "110000",
         createTime: date.createTime,
         recentlyTime: date.recentlyTime,
-      });
+      };
     });
 
     //base64格式的头像
@@ -260,6 +322,14 @@ export default {
       });
     });
 
+    function changeUserNameEditState() {
+      userNameEditState.value = !userNameEditState.value;
+    }
+
+    function changeIntroductionEditState() {
+      introductionEditState.value = !introductionEditState.value;
+    }
+
     function notic(title, message, type, duration, offset = 100) {
       return ElNotification({
         title: title,
@@ -281,8 +351,14 @@ export default {
       portraitImgRef,
       sexSetting,
       birthSetting,
+      userNameEditState,
+      introductionEditState,
+      emailDialogVisible,
+      emailDialogSetting,
       saveInfo,
       savePortrait,
+      changeUserNameEditState,
+      changeIntroductionEditState,
     };
   },
 };
@@ -328,6 +404,7 @@ input[type="text"]:valid {
 }
 
 .info_warppper >>> .el-descriptions__table .is-bordered-label {
+  height: 44px;
   color: white;
   background-color: var(--mainbgcolor) !important;
   border: none;
@@ -335,6 +412,7 @@ input[type="text"]:valid {
 }
 
 .info_warppper >>> .el-descriptions__table .is-bordered-content {
+  height: 44px;
   color: white;
   background-color: var(--mainbgcolor) !important;
   border: none;
@@ -388,4 +466,35 @@ input[type="text"]:valid {
   border-radius: 50%;
   border: none;
 }
+
+.item-content input {
+  width: 150px;
+  height: 24px;
+  background-color: var(--mainbgcolor);
+  border: 1px solid white;
+  border-radius: 4px;
+  color: #606266;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 7px;
+  font-size: inherit;
+}
+
+.item-content input:focus { 
+  outline: none;
+}
+
+:deep(.el-dialog) {
+  background-color: #f2f6fa;
+  border-radius: 18px;
+}
+
+:deep(.el-dialog__footer){
+  text-align: right;
+}
+
+.dialog-footer button{
+  margin-right: 10px;
+}
+
 </style>

@@ -70,7 +70,7 @@ import { computed, onMounted } from "@vue/runtime-core";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 export default {
-  name: "TrandAccount",
+  name: "TradeAccount",
   setup() {
     //配置导航栏信息
     const navigation = reactive({
@@ -98,7 +98,7 @@ export default {
     }
 
     function addAccount() {
-      route.push("/tradAccount/add");
+      route.push("/tradeAccount/add");
     }
 
     //弹窗

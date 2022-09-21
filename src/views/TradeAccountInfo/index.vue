@@ -17,7 +17,7 @@
       </ul>
     </div>
     <ExchangeAccountInfo :eai=eai />
-    <div class="trand_btn">
+    <div class="trade_btn">
       <el-button type="primary" @click="saveInfo">保存</el-button>
       <el-button type="info" @click="resetInfo">重置</el-button>
     </div>
@@ -32,7 +32,7 @@ import { useStore } from "vuex";
 import ExchangeAccountInfo from "@/components/ExchangeAccountInfo/index.vue";
 import { reqUpExchangeAccountPermissions } from '@/api';
 export default {
-  name: "TrandAccountInfo",
+  name: "TradeAccountInfo",
   setup() {
     const store = useStore();
     var itemActive = ref(1);
@@ -158,7 +158,7 @@ export default {
   width: 700px;
 }
 
-.eai-wrapper .trand_btn {
+.eai-wrapper .trade_btn {
   padding-top: 40px;
   display: flex;
   justify-content: center;
@@ -169,7 +169,7 @@ export default {
   margin: 0;
   list-style: none;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 5px;
 }
 

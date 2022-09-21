@@ -58,7 +58,7 @@ export const reqUserInfo = (params) => {
 //请求获取用户头像信息
 export const reqUserPortraitImage = (params) => {
   return requests({
-    url: `/user/portrait_image`,
+    url: `/user/portrait_img`,
     method: 'get',
     params: params
   })
@@ -80,7 +80,7 @@ export const reqLogout = (data) => {
 //获取所有支持的交易所
 export const reqAllExchange = (params) => {
   return requests({
-    url: `/ex/get_all_exchange`,
+    url: `/ex/get_all_ex`,
     method: 'get',
     params: params
   })
@@ -89,7 +89,7 @@ export const reqAllExchange = (params) => {
 //获取用户交易所账户
 export const reqUserExchange = (params) => {
   return requests({
-    url: `/ex/get_user_exchange`,
+    url: `/ex/get_user_ex`,
     method: 'get',
     params: params
   })
@@ -101,8 +101,8 @@ export const reqAddAccount = (data) => {
     headers: {
       'Content-Type':'application/json',
     },
-    url: `/ex/add_account`,
-    method: 'post',-
+    url: `/ex/add_acc`,
+    method: 'post',
     data: JSON.stringify(data)
   })
 }
@@ -125,7 +125,7 @@ export const reqUpExchangeAccountPermissions = (data) => {
     headers: {
       'Content-Type':'application/json',
     },
-    url: `/ex/up_exchange_account_info`,
+    url: `/ex/up_ex_acc_info`,
     method: 'put',
     data: JSON.stringify(data)
   })
@@ -134,7 +134,7 @@ export const reqUpExchangeAccountPermissions = (data) => {
 //删除用户交易账户
 export const reqDelExchangeAccount = (params) => {
   return requests({
-    url: `/ex/del_exchange_account`,
+    url: `/ex/del_ex_acc`,
     method: 'delete',
     params: params
   })

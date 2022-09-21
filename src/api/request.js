@@ -1,9 +1,10 @@
 //对于axios进行二次封装
 import router from '@/router';
 import store from '@/store';
-import { filtCookie } from '@/utils';
+import {
+  statusCode
+} from '@/utils';
 import axios from 'axios';
-
 //使用进度条
 import nprogress from 'nprogress'
 //引入进度条样式
@@ -22,14 +23,14 @@ const requests = axios.create({
 });
 
 //创建路由不需要token的列表
-  const openUlr = [
-    '/index',
-    '/auth/login',
-    '/user/captcha',
-    '/user/email_captcha',
-    '/user/reg',
-    '/ex/get_all_exchange',
-  ]
+const openUlr = [
+  '/index',
+  '/auth/login',
+  '/user/captcha',
+  '/user/email_captcha',
+  '/user/reg',
+  '/ex/get_all_ex',
+];
 
 
 //请求拦截器: 发送请求之前进行拦截，进行处理操作，再发送
@@ -41,11 +42,16 @@ requests.interceptors.request.use((config) => {
 
   //如果本地有token则获取token
   var token = localStorage.getItem('qp-token');
-  if(token && openUlr.indexOf(config.url) == -1){
+  if (token && openUlr.indexOf(config.url) == -1) {
     config.headers.Authorization = token;
   }
 
-  config.headers.Cookie = document.cookie;
+  console.log("发送请求->", {
+    token: token,
+    url: config.url,
+    result: openUlr.indexOf(config.url) == -1,
+    config,
+  })
 
   return config;
 })
@@ -58,30 +64,32 @@ requests.interceptors.response.use(
     // nprogress.done();
     //存储token到本地
     var headers = res.headers;
+    //判断是否是发送登录的请求，如果是保存响应的token
     if (res.config.url == '/auth/login') {
+      console.log("检测到登录-----");
       if (headers.authorization) {
         localStorage.setItem('qp-token', headers.authorization);
       }
     }
 
-    //如果请求头中含有 JWTExpired标题测认证失败,需要重新登录
-    if(headers.jwtexpired){
-      //清空用户信息
-      store.state.userInfoStore.userInfo = {};
-      store.state.userInfoStore.userPortraitImage = "";
-      store.state.exchangeStore.allExchange = [];
-      store.state.exchangeStore.userExchange = [];
-      //跳转登录页面
-      router.push(`/login`);
+    if (res.data.code == statusCode.UNVERIFIED.code) {
+      console.log("检测到认证失败:",res)
+      var path = router.options.history.state.current;
+      if (path != '/login') {
+        //跳转登录页面
+        console.log('/login' + '?redirect='+ path);
+        router.push('/login' + '?redirect='+ path);
+      }
     }
-    console.log(res)
+
+    console.log("响应拦截", res, router);
+
     return res.data;
   },
   (error) => {
     //响应失败调用此方法
-    console.log("request err:", error);
-    return Promise.reject(new Error('faile'));
-  }
+    return Promise.reject(new Error('faile', error));
+  },
 )
 
 //对外暴露
