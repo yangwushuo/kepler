@@ -64,15 +64,43 @@
             :show-close="emailDialogSetting.showClose"
           >
             <template #title>
-              <span style="color: #464646;font-family: 'drameH';font-size: 18px;">{{ emailDialogSetting.title }}</span>
+              <span
+                style="color: #464646; font-family: 'drameH'; font-size: 18px"
+                >{{ emailDialogSetting.title }}</span
+              >
             </template>
-            <div>
-              <input type="text"/>
+            <div class="email-dialog-wrapper">
+              <div class="email-dialog-wrapper-item">
+                <div class="email-dialog-wrapper-title">新邮箱</div>
+                <input id="new-email" type="text" />
+              </div>
+              <div></div>
+              <div class="email-dialog-wrapper-item">
+                <div class="email-dialog-wrapper-title">验证码</div>
+                <input id="ver-code" type="text" />
+                <button
+                  id="ver-code-butt"
+                  class="button1 button1-primary button1-pill button1-small"
+                >
+                  获取验证码
+                </button>
+              </div>
+              <div></div>
             </div>
             <template #footer>
               <span class="dialog-footer">
-                <button class="button1  button1-pill button1-small button-tiny" @click="emailDialogVisible = false">取消</button>
-                <button class="button1 button1-primary button1-pill button1-small" @click="emailDialogVisible = false">确认</button>
+                <button
+                  class="button1 button1-pill button1-small button-tiny"
+                  @click="emailDialogVisible = false"
+                >
+                  取消
+                </button>
+                <button
+                  class="button1 button1-primary button1-pill button1-small"
+                  @click="emailDialogVisible = false"
+                >
+                  确认
+                </button>
               </span>
             </template>
           </el-dialog>
@@ -480,7 +508,7 @@ input[type="text"]:valid {
   font-size: inherit;
 }
 
-.item-content input:focus { 
+.item-content input:focus {
   outline: none;
 }
 
@@ -489,12 +517,59 @@ input[type="text"]:valid {
   border-radius: 18px;
 }
 
-:deep(.el-dialog__footer){
+:deep(.el-dialog__footer) {
   text-align: right;
 }
 
-.dialog-footer button{
+.dialog-footer button {
   margin-right: 10px;
 }
 
+.email-dialog-wrapper .email-dialog-wrapper-item{
+  display: flex;
+  margin: 10px auto;
+}
+
+.email-dialog-wrapper-item .email-dialog-wrapper-title{
+  width: 20%;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+}
+
+.email-dialog-wrapper .email-dialog-wrapper-item #new-email {
+  width: 70%;
+  height: 30px;
+  background-color: #f3f4f7;
+  border: 1px solid #00bce4;
+  color: black !important;
+  border-radius: 12px;
+  padding-left: 2%;
+  transition: all 0.2s;
+}
+
+.email-dialog-wrapper .email-dialog-wrapper-item #ver-code{
+  width: 30%;
+  height: 30px;
+  background-color: #f3f4f7;
+  border: 1px solid #00bce4;
+  color: black !important;
+  border-radius: 12px;
+  padding-left: 2%;
+  transition: all 0.2s;
+}
+
+.email-dialog-wrapper .email-dialog-wrapper-item #ver-code-butt{
+  margin-left: 10px;
+}
+
+.email-dialog-wrapper input:focus {
+  border: 1px solid #00bce4;
+  background-color: #f3f4f7;
+}
+
+.email-dialog-wrapper input:hover {
+  border: 1px solid #00bce4;
+  background-color: #f3f4f7;
+}
 </style>
