@@ -72,7 +72,7 @@
             <div class="email-dialog-wrapper">
               <div class="email-dialog-wrapper-item">
                 <div class="email-dialog-wrapper-title">新邮箱</div>
-                <input id="new-email" type="text" />
+                <input id="new-email" type="text" @input="newInputEmail" />
               </div>
               <div></div>
               <div class="email-dialog-wrapper-item">
@@ -81,8 +81,13 @@
                 <button
                   id="ver-code-butt"
                   class="button1 button1-primary button1-pill button1-small"
+                  @click="getEmailCaptcha"
                 >
-                  获取验证码
+                  <i v-show="getCaptchaShow.initial">获取验证码</i>
+                  <i v-show="getCaptchaShow.proceed"
+                    >{{ getCaptchaShow.time }}s</i
+                  >
+                  <i v-show="getCaptchaShow.resend">重新获取</i>
                 </button>
               </div>
               <div></div>
@@ -96,7 +101,7 @@
                   取消
                 </button>
                 <button
-                  class="button1 button1-primary button1-pill button1-small"
+                  class="button1 button1-action button1-pill button1-small"
                   @click="emailDialogVisible = false"
                 >
                   确认
@@ -197,7 +202,7 @@ import { computed, nextTick, onMounted, reactive, ref } from "vue";
 import { useStore } from "vuex";
 import { ElNotification } from "element-plus";
 import plupload from "plupload";
-import { reqUpUserInfo } from "@/api";
+import { reqUpUserInfo, reqEmailCaptcha } from "@/api";
 import { statusCode } from "@/utils";
 export default {
   name: "AccountInfo",
@@ -248,6 +253,13 @@ export default {
       showClose: false,
     });
 
+    var getCaptchaShow = reactive({
+      initial: true,
+      proceed: false,
+      resend: false,
+      time: 60,
+    });
+
     //获取用户信息sex
     var userInfo = computed(() => {
       var date = store.state.userInfoStore.userInfo;
@@ -266,6 +278,51 @@ export default {
 
     //base64格式的头像
     var b64Img = store.state.userInfoStore.userPortraitImage;
+    //新邮箱
+    var newEmail = reactive({
+      email: "",
+      captchaId: "",
+      captcha: "",
+    });
+
+    function verCaptcha(){
+      return true;
+    }
+
+    //获取邮箱验证码
+    function getEmailCaptcha() {
+      //校验
+      if (verCaptcha() && !getCaptchaShow.proceed) {
+        //请求发送验证码并获取验证id
+        reqEmailCaptcha({ email: store.state.userInfoStore.userInfo.email })
+          .then((res) => {
+            if (res.code == statusCode.SUCCESS.code) {
+              newEmail.captchaId = res.data;
+              console.log(newEmail.captchaId);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        //开始倒计时
+        var timer = setInterval(() => {
+          getCaptchaShow.time -= 1;
+          if (getCaptchaShow.time == 0) {
+            getCaptchaShow.time = 60;
+            clearInterval(timer);
+            //设置重新获取状态
+            getCaptchaShow.proceed = false;
+            getCaptchaShow.initial = false;
+            getCaptchaShow.resend = true;
+          }
+        }, 1000);
+        //设置记录时间状态
+        getCaptchaShow.proceed = true;
+        getCaptchaShow.initial = false;
+        getCaptchaShow.resend = false;
+      }
+    }
 
     function saveInfo() {
       console.log(userInfo.value);
@@ -358,6 +415,10 @@ export default {
       introductionEditState.value = !introductionEditState.value;
     }
 
+    function newInputEmail(event) {
+      newEmail.email = event.target.value;
+    }
+
     function notic(title, message, type, duration, offset = 100) {
       return ElNotification({
         title: title,
@@ -387,6 +448,9 @@ export default {
       savePortrait,
       changeUserNameEditState,
       changeIntroductionEditState,
+      newInputEmail,
+      getCaptchaShow,
+      getEmailCaptcha,
     };
   },
 };
@@ -525,12 +589,12 @@ input[type="text"]:valid {
   margin-right: 10px;
 }
 
-.email-dialog-wrapper .email-dialog-wrapper-item{
+.email-dialog-wrapper .email-dialog-wrapper-item {
   display: flex;
   margin: 10px auto;
 }
 
-.email-dialog-wrapper-item .email-dialog-wrapper-title{
+.email-dialog-wrapper-item .email-dialog-wrapper-title {
   width: 20%;
   text-align: center;
   height: 30px;
@@ -548,7 +612,7 @@ input[type="text"]:valid {
   transition: all 0.2s;
 }
 
-.email-dialog-wrapper .email-dialog-wrapper-item #ver-code{
+.email-dialog-wrapper .email-dialog-wrapper-item #ver-code {
   width: 30%;
   height: 30px;
   background-color: #f3f4f7;
@@ -559,7 +623,8 @@ input[type="text"]:valid {
   transition: all 0.2s;
 }
 
-.email-dialog-wrapper .email-dialog-wrapper-item #ver-code-butt{
+.email-dialog-wrapper .email-dialog-wrapper-item #ver-code-butt {
+  width: 35%;
   margin-left: 10px;
 }
 
