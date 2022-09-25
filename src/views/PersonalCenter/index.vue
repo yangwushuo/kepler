@@ -23,7 +23,7 @@ export default {
     //配置导航栏数据
     var navMenu = reactive({
       activeButton: route.meta.index,
-      styleName: '--pcs',
+      styleName: '--ns',
       style: {
         width: "135px",
 

@@ -98,7 +98,7 @@ import { reqCaptcha, reqLogin } from "@/api";
 import { reactive, onMounted, inject, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage, ElLoading } from "element-plus";
-import _, { chain } from "lodash";
+import _ from "lodash";
 import { statusCode } from "@/utils";
 import { useStore } from "vuex";
 

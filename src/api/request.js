@@ -73,8 +73,11 @@ requests.interceptors.response.use(
     }
 
     if (res.data.code == statusCode.UNVERIFIED.code) {
-      console.log("检测到认证失败:",res)
+      console.log("检测到认证失败:",res);
       var path = router.options.history.state.current;
+      if(path.indexOf("redirect") != -1){
+        path = path.split("=")[1];
+      }
       if (path != '/login') {
         //跳转登录页面
         console.log('/login' + '?redirect='+ path);

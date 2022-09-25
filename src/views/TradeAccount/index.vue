@@ -1,63 +1,11 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside class="aside"
-        ><el-scrollbar :height="scrollbar.height">
-          <el-menu
-            class="el-menu-vertical-demo"
-            :collapse="isCollapse"
-            :background-color="navigation.backgroundColor"
-            :text-color="navigation.textColor"
-            :active-text-color="navigation.activeTextColor"
-            :default-active="navigation.defaultActive"
-            :unique-opened="navigation.uniqueOpened"
-            :default-openeds="navigation.defaultOpeneds"
-            ref="eLmenuRef"
-          >
-            <el-sub-menu
-              v-for="(item, index) in exchangeList"
-              :key="index"
-              :index="index"
-            >
-              <template #title>
-                <img
-                  class="exchangeLogo"
-                  :src="getExchangeLogo(item.exchangeName)"
-                />
-                <span class="exchangeTitle">{{ item.nickName }}</span>
-              </template>
-              <el-menu-item :index="index + '-1'" v-if="item.spot"
-                >总览</el-menu-item
-              >
-              <el-menu-item :index="index + '-2'" v-if="item.spot"
-                >现货</el-menu-item
-              >
-              <el-menu-item :index="index + '-3'" v-if="item.usdFutures"
-                >U永续</el-menu-item
-              >
-              <el-menu-item :index="index + '-4'" v-if="item.coinFutures"
-                >币本位</el-menu-item
-              >
-              <el-menu-item :index="index + '-5'" v-if="item.options"
-                >期货</el-menu-item
-              >
-            </el-sub-menu>
-            <div class="add-acc">
-              <button
-                class="
-                  button1 button1-glow button1-rounded button1-highlight
-                  add-acc-button
-                "
-                @click="addAccount"
-              >
-                添加账户
-              </button>
-            </div>
-          </el-menu>
-        </el-scrollbar>
+      <el-aside width="160px">
+        <Navcation :navMenu="navMenu" />
       </el-aside>
       <el-main class="el-main">
-        <router-view ></router-view>
+        <router-view></router-view>
       </el-main>
     </el-container>
   </div>
@@ -68,39 +16,113 @@ import { reactive } from "vue";
 import { useStore } from "vuex";
 import { computed, onMounted } from "@vue/runtime-core";
 import { ElMessage } from "element-plus";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import Navcation from "@/components/Navcation/index.vue";
 export default {
   name: "TradeAccount",
   setup() {
-    //配置导航栏信息
-    const navigation = reactive({
-      backgroundColor:
-        document.documentElement.style.getPropertyValue("--mainbgcolor"),
-      textColor: "#fff",
-      activeTextColor: "#fff234",
-      defaultActive: "0-1",
-      uniqueOpened: false,
-      defaultOpeneds: [0],
-    });
-
+    const router = useRouter();
+    const route = useRoute();
     //配置滚动条
     const scrollbar = reactive({
       height: "95vh",
     });
-
     //创建store
     const store = useStore();
-    //创建路由
-    const route = useRouter();
+    //配置导航栏信息
+    var navMenu = reactive({
+      activeButton: "0",
+      styleName: "--ns",
+      style: {
+        width: "155px",
+
+        navButtonWidth: "120px",
+        navButtonHeight: "40px",
+        navButtonRadius: "20px 20px 20px 20px", //圆角矩形高度一半
+        navButtonBC: "#8f8f8c",
+        navButtonFontSize: "16px",
+        navButtonFontBC: "white",
+        navButtonHoverWidth: "135px",
+        navButtonHoverBC: "#285ff3",
+        navButtonActiveWidth: "135px",
+        navButtonActiveBC: "#285ff3",
+
+        nav1ButtonWidth: "100px",
+        nav1ButtonHeight: "30px",
+        nav1ButtonRadius: "20px 20px 20px 20px",
+        nav1ButtonBC: "#8f8f8c",
+        nav1ButtonFontSize: "12px",
+        nav1ButtonFontBC: "white",
+        nav1ButtonHoverWidth: "100px",
+        nav1ButtonHoverBC: "#ff6319",
+        nav1ButtonActiveWidth: "100px",
+        nav1ButtonActiveBC: "#ff6319",
+      },
+      navItem: getUserExchangeToNav(),
+    });
 
     function getExchangeLogo(exchangeName) {
       return require("@/assets/img/exchangeLogo/" + exchangeName + ".png");
     }
+    function getUserExchangeToNav() {
+      var userExs = store.state.exchangeStore.userExchange;
+      var result = [];
+      for (let index = 0; index < userExs.length; index++) {
+        var item = {};
+        var userEx = userExs[index];
+        item.index = "" + index;
+        item.name = userEx.nickName;
+        item.click = () => {
+          navMenu.activeButton = "" + index;
+          console.log(navMenu.activeButton);
+        };
+        item.childs = [];
+        if (userEx.spot) {
+          item.childs.push({
+            index: "" + index + "-1",
+            name: "现货",
+            click: () => {
+              navMenu.activeButton = "" + index + "-1";
+              console.log(navMenu.activeButton);
+            },
+          });
+        }
+        if (userEx.usdFutures) {
+          item.childs.push({
+            index: "" + index + "-2",
+            name: "U永续",
+            click: () => {
+              navMenu.activeButton = "" + index + "-2";
+              console.log(navMenu.activeButton);
+            },
+          });
+        }
+        if (userEx.coinFutures) {
+          item.childs.push({
+            index: "" + index + "-3",
+            name: "币永续",
+            click: () => {
+              navMenu.activeButton = "" + index + "-3";
+              console.log(navMenu.activeButton);
+            },
+          });
+        }
+        if (userEx.options) {
+          item.childs.push({index: "" + index + "-4",
+            name: "期权",
+            click: () => {
+              navMenu.activeButton = "" + index + "-4";
+              console.log(navMenu.activeButton);
+            },});
+        }
+        result.push(item);
+      }
 
-    function addAccount() {
-      route.push("/tradeAccount/add");
+      return result;
     }
-
+    function addAccount() {
+      router.push("/tradeAccount/add");
+    }
     //弹窗
     function errHint(msg, time = 3000) {
       return ElMessage({
@@ -115,24 +137,22 @@ export default {
         duration: time,
       });
     }
-
     var exchangeList = computed(() => {
       return store.state.exchangeStore.userExchange;
     });
-
     onMounted(() => {
       //请求获取该用户拥有的交易所账户
       store.dispatch("exchangeStore/getUserExchange");
     });
-
     return {
-      navigation,
+      navMenu,
       scrollbar,
       exchangeList,
       getExchangeLogo,
       addAccount,
     };
   },
+  components: { Navcation },
 };
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="nav">
+  <div class="nav" id="nav">
     <ul>
       <li v-for="item in menu.navItem" :key="item.index" @click="item.click">
         <button
@@ -12,12 +12,12 @@
           <div class="nav-title">
             <span>{{ item.name }}</span>
             <span
-              v-show="item.index != menu.activeButton && item.childs"
+              v-show="item.index != menu.activeButton.split('-')[0] && item.childs"
               class="material-symbols-outlined"
               >expand_more</span
             >
             <span
-              v-show="item.index == menu.activeButton && item.childs"
+              v-show="item.index == menu.activeButton.split('-')[0] && item.childs"
               class="material-symbols-outlined"
               >expand_less</span
             >
@@ -38,7 +38,7 @@
                   : 'nav1-button'
               "
             >
-              <span>{{ item1.name}}</span>
+              <span>{{ item1.name }}</span>
             </button>
           </div>
         </transition>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { computed } from "@vue/runtime-core";
+import { computed, nextTick, watch } from "@vue/runtime-core";
 export default {
   name: "Navcation",
   props: {
@@ -56,15 +56,26 @@ export default {
   },
   setup(props) {
     var menu = computed(() => {
-      if (props.navMenu.style) {
-          console.log(2222)
-          var dc = document.documentElement.style;
-          var name = props.navMenu.styleName;
-          for (var key in props.navMenu.style) {
-            dc.setProperty(name + key, props.navMenu.style[key]);
-          }
-        }
       return props.navMenu;
+    });
+
+    nextTick(() => {
+      var nav = document.getElementById("nav").style;
+      watch(
+        () => props.navMenu.style,
+        () => {
+          if (props.navMenu.style) {
+            var name = props.navMenu.styleName;
+            for (var key in props.navMenu.style) {
+              nav.setProperty(name + key, props.navMenu.style[key]);
+            }
+          }
+        },
+        {
+          immediate: true,
+          deep: true,
+        }
+      );
     });
 
     return {
@@ -77,8 +88,9 @@ export default {
 <style scoped>
 .nav {
   margin-top: 40px;
-  width: var(--pcswidth);
+  width: var(--nswidth);
   text-align: right;
+  float: right;
 }
 
 .nav li {
@@ -93,26 +105,26 @@ export default {
 }
 
 .nav .nav-button {
-  width: var(--pcsnavButtonWidth);
-  height: var(--pcsnavButtonHeight);
-  border-radius: var(--pcsnavButtonRadius);
-  background-color: var(--pcsnavButtonBC);
+  width: var(--nsnavButtonWidth);
+  height: var(--nsnavButtonHeight);
+  border-radius: var(--nsnavButtonRadius);
+  background-color: var(--nsnavButtonBC);
   border: none;
-  font-size: var(--pcsnavButtonFontSize);
-  color: var(--pcsnavButtonFontBC);
+  font-size: var(--nsnavButtonFontSize);
+  color: var(--nsnavButtonFontBC);
   transition: 0.4s;
   cursor: pointer;
 }
 
 .nav .nav-button:hover {
-  width: var(--pcsnavButtonHoverWidth);
-  background-color: var(--pcsnavButtonHoverBC);
+  width: var(--nsnavButtonHoverWidth);
+  background-color: var(--nsnavButtonHoverBC);
   color: white;
 }
 
 .nav-button-active {
-  width: var(--pcsnavButtonActiveWidth) !important;
-  background-color: var(--pcsnavButtonActiveBC) !important;
+  width: var(--nsnavButtonActiveWidth) !important;
+  background-color: var(--nsnavButtonActiveBC) !important;
   color: white;
 }
 
@@ -121,28 +133,28 @@ export default {
 }
 
 .nav .nav1-button {
-  width: var(--pcsnav1ButtonWidth);
-  height: var(--pcsnav1ButtonHeight);
-  border-radius: var(--pcsnav1ButtonRadius);
-  background-color: var(--pcsnav1ButtonBC);
+  width: var(--nsnav1ButtonWidth);
+  height: var(--nsnav1ButtonHeight);
+  border-radius: var(--nsnav1ButtonRadius);
+  background-color: var(--nsnav1ButtonBC);
   margin-top: 5px;
   border: none;
-  font-size: var(--pcsnav1ButtonFontSize);
+  font-size: var(--nsnav1ButtonFontSize);
   /* 圆角矩形高度一半 */
-  color: var(--pcsnav1ButtonFontBC);
+  color: var(--nsnav1ButtonFontBC);
   transition: 0.4s;
   cursor: pointer;
 }
 
 .nav .nav1-button:hover {
-  width: var(--pcsnav1ButtonHoverWidth) !important;
-  background-color: var(--pcsnav1ButtonHoverBC) !important;
+  width: var(--nsnav1ButtonHoverWidth) !important;
+  background-color: var(--nsnav1ButtonHoverBC) !important;
   color: white;
 }
 
 .nav1-button-active {
-  width: var(--pcsnav1ButtonActiveWidth) !important;
-  background-color: var(--pcsnav1ButtonActiveBC) !important;
+  width: var(--nsnav1ButtonActiveWidth) !important;
+  background-color: var(--nsnav1ButtonActiveBC) !important;
 }
 
 .fade-enter-active,

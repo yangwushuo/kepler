@@ -139,3 +139,15 @@ export const reqDelExchangeAccount = (params) => {
     params: params
   })
 }
+
+//更新用户邮箱
+export const reqUpUserEmail = (data) => {
+  return requests({
+    headers: {
+      'Content-Type':'application/json',
+    },
+    url: `/user/up_email`,
+    method: 'put',
+    data: JSON.stringify(data)
+  })
+}

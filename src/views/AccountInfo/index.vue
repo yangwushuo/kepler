@@ -62,6 +62,8 @@
             :close-delay="emailDialogSetting.closeDelay"
             :custom-class="emailDialogSetting.customClass"
             :show-close="emailDialogSetting.showClose"
+            :destroy-on-close = "emailDialogSetting.destroyOnClose"
+            @close="clearNewEmailInfo"
           >
             <template #title>
               <span
@@ -72,12 +74,26 @@
             <div class="email-dialog-wrapper">
               <div class="email-dialog-wrapper-item">
                 <div class="email-dialog-wrapper-title">新邮箱</div>
-                <input id="new-email" type="text" @input="newInputEmail" />
+                <input
+                  id="new-email"
+                  type="text"
+                  @input="newInputEmail"
+                  autocomplete="off"
+                />
               </div>
-              <div></div>
+              <div class="email-dialog-hint">
+                <span ref="emailHint"></span>
+              </div>
               <div class="email-dialog-wrapper-item">
                 <div class="email-dialog-wrapper-title">验证码</div>
-                <input id="ver-code" type="text" />
+                <input
+                  id="ver-code"
+                  type="text"
+                  @input="newInputCaptcha"
+                  autocomplete="off"
+                  maxlength="6"
+                  minlength="6"
+                />
                 <button
                   id="ver-code-butt"
                   class="button1 button1-primary button1-pill button1-small"
@@ -90,19 +106,24 @@
                   <i v-show="getCaptchaShow.resend">重新获取</i>
                 </button>
               </div>
-              <div></div>
+              <div class="email-dialog-hint">
+                <span ref="verCodeHint"></span>
+              </div>
+              <div class="email-dialog-hint">
+                <span id="save-email-hint" ref="saveNewEmailHint"></span>
+              </div>
             </div>
             <template #footer>
               <span class="dialog-footer">
                 <button
                   class="button1 button1-pill button1-small button-tiny"
-                  @click="emailDialogVisible = false"
+                  @click="cancelEmailDialog"
                 >
                   取消
                 </button>
                 <button
                   class="button1 button1-action button1-pill button1-small"
-                  @click="emailDialogVisible = false"
+                  @click="confirmEmailDialog"
                 >
                   确认
                 </button>
@@ -138,7 +159,7 @@
         </div>
       </el-descriptions-item>
       <el-descriptions-item>
-        <template #label> 地址 </template>
+        <template #label> 省份 </template>
         <el-select
           v-model="userInfo.province"
           :placeholder="userInfo.province"
@@ -198,12 +219,21 @@
 </template>
 
 <script>
-import { computed, nextTick, onMounted, reactive, ref } from "vue";
+import {
+  computed,
+  nextTick,
+  onMounted,
+  reactive,
+  ref,
+  inject,
+  toRaw,
+} from "vue";
 import { useStore } from "vuex";
 import { ElNotification } from "element-plus";
 import plupload from "plupload";
-import { reqUpUserInfo, reqEmailCaptcha } from "@/api";
+import { reqUpUserInfo, reqEmailCaptcha, reqUpUserEmail } from "@/api";
 import { statusCode } from "@/utils";
+import _ from "lodash";
 export default {
   name: "AccountInfo",
   setup() {
@@ -251,6 +281,7 @@ export default {
       alignCenter: false,
       customClass: "email-dialog",
       showClose: false,
+      destroyOnClose: true,
     });
 
     var getCaptchaShow = reactive({
@@ -263,7 +294,7 @@ export default {
     //获取用户信息sex
     var userInfo = computed(() => {
       var date = store.state.userInfoStore.userInfo;
-      return {
+      return reactive({
         id: date.id,
         email: date.email,
         username: date.username,
@@ -273,7 +304,7 @@ export default {
         province: date.province ? date.province + "" : "110000",
         createTime: date.createTime,
         recentlyTime: date.recentlyTime,
-      };
+      });
     });
 
     //base64格式的头像
@@ -285,20 +316,43 @@ export default {
       captcha: "",
     });
 
-    function verCaptcha(){
-      return true;
+    var validator = inject("validator");
+    var emailHint = ref(null);
+    var verCodeHint = ref(null);
+    var saveNewEmailHint = ref(null);
+
+    function verEmail() {
+      var result = true;
+
+      //判断是否为空
+      if (_.isEqual(newEmail.email, "")) {
+        emailHint.value.innerText = "邮箱不能为空";
+        result = false;
+      }
+
+      validator.validate({ email: newEmail.email }, (errors) => {
+        if (errors) {
+          emailHint.value.innerText = errors[0].message;
+          result = false;
+        }
+      });
+
+      if (result) {
+        emailHint.value.innerText = "";
+      }
+
+      return result;
     }
 
     //获取邮箱验证码
     function getEmailCaptcha() {
       //校验
-      if (verCaptcha() && !getCaptchaShow.proceed) {
+      if (verEmail() && !getCaptchaShow.proceed) {
         //请求发送验证码并获取验证id
         reqEmailCaptcha({ email: store.state.userInfoStore.userInfo.email })
           .then((res) => {
             if (res.code == statusCode.SUCCESS.code) {
               newEmail.captchaId = res.data;
-              console.log(newEmail.captchaId);
             }
           })
           .catch((error) => {
@@ -419,6 +473,50 @@ export default {
       newEmail.email = event.target.value;
     }
 
+    function newInputCaptcha(event) {
+      newEmail.captcha = event.target.value;
+    }
+
+    function clearNewEmailInfo() {
+      newEmail.email = "";
+      newEmail.captcha = "";
+      newEmail.captchaId = "";
+    }
+
+    function confirmEmailDialog() {
+      //校验验证码格式
+      if (newEmail.captcha.length != 6 && !verEmail()) {
+        verCodeHint.value.innerText = "验证码格式错误";
+        return;
+      } else {
+        verCodeHint.value.innerText = "";
+        emailHint.value.innerText = "";
+      }
+
+      reqUpUserEmail(toRaw(newEmail))
+        .then((res) => {
+          if (res.code == statusCode.SUCCESS.code) {
+            notic("保存新邮箱成功", null, "success", 2000);
+            saveNewEmailHint.value.innerText = "";
+            emailDialogVisible.value = false;
+            clearNewEmailInfo();
+            store.dispatch("userInfoStore/getUserInfo");
+          } else {
+            //提示错误
+            console.log(res);
+            saveNewEmailHint.value.innerText = "新邮箱更新失败";
+          }
+        })
+        .catch((error) => {
+          saveNewEmailHint.value.innerText = "新邮箱更新失败";
+        });
+    }
+
+    function cancelEmailDialog() {
+      clearNewEmailInfo();
+      emailDialogVisible.value = false;
+    }
+
     function notic(title, message, type, duration, offset = 100) {
       return ElNotification({
         title: title,
@@ -442,6 +540,9 @@ export default {
       birthSetting,
       userNameEditState,
       introductionEditState,
+      emailHint,
+      verCodeHint,
+      saveNewEmailHint,
       emailDialogVisible,
       emailDialogSetting,
       saveInfo,
@@ -451,6 +552,10 @@ export default {
       newInputEmail,
       getCaptchaShow,
       getEmailCaptcha,
+      newInputCaptcha,
+      clearNewEmailInfo,
+      cancelEmailDialog,
+      confirmEmailDialog,
     };
   },
 };
@@ -591,19 +696,39 @@ input[type="text"]:valid {
 
 .email-dialog-wrapper .email-dialog-wrapper-item {
   display: flex;
-  margin: 10px auto;
 }
 
-.email-dialog-wrapper-item .email-dialog-wrapper-title {
+.email-dialog-wrapper-title {
   width: 20%;
   text-align: center;
-  height: 30px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.email-dialog-wrapper .email-dialog-hint {
+  height: 25px;
+  position: relative;
+}
+
+.email-dialog-wrapper .email-dialog-hint span {
+  color: #e4002b;
+  margin-left: 22%;
+}
+
+.email-dialog-wrapper .email-dialog-hint #save-email-hint {
+  font-family: "dreamH";
+  color: #e4002b;
+  font-size: 18px;
+  margin-left: 0;
+  position:absolute;;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .email-dialog-wrapper .email-dialog-wrapper-item #new-email {
   width: 70%;
-  height: 30px;
+  height: 40px;
   background-color: #f3f4f7;
   border: 1px solid #00bce4;
   color: black !important;
@@ -614,7 +739,7 @@ input[type="text"]:valid {
 
 .email-dialog-wrapper .email-dialog-wrapper-item #ver-code {
   width: 30%;
-  height: 30px;
+  height: 40px;
   background-color: #f3f4f7;
   border: 1px solid #00bce4;
   color: black !important;
@@ -624,8 +749,10 @@ input[type="text"]:valid {
 }
 
 .email-dialog-wrapper .email-dialog-wrapper-item #ver-code-butt {
-  width: 35%;
+  width: 27%;
+  height: 40px;
   margin-left: 10px;
+  line-height: 40px;
 }
 
 .email-dialog-wrapper input:focus {
