@@ -81,5 +81,6 @@ app.use(FloatingVue)
 import VuePluload from 'vue-plupload'
 app.use(VuePluload);
 
+
 app.mount('#app');
 

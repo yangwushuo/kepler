@@ -1,23 +1,28 @@
 <template>
   <div class="nav" id="nav">
     <ul>
-      <li v-for="item in menu.navItem" :key="item.index" @click="item.click">
+      <li v-for="item in menuItem" :key="item.index" @click="item.click">
         <button
           :class="
-            item.index == menu.activeButton.split('-')[0]
+            item.index == activeButton.split('-')[0]
               ? 'nav-button nav-button-active'
               : 'nav-button'
           "
         >
           <div class="nav-title">
+            <img
+              style="width: 20px; margin-right: 5px;"
+              v-if="item.logo"
+              :src="getLogo(item.logo)"
+            />
             <span>{{ item.name }}</span>
             <span
-              v-show="item.index != menu.activeButton.split('-')[0] && item.childs"
+              v-show="item.index != activeButton && item.childs"
               class="material-symbols-outlined"
               >expand_more</span
             >
             <span
-              v-show="item.index == menu.activeButton.split('-')[0] && item.childs"
+              v-show="item.index == activeButton && item.childs"
               class="material-symbols-outlined"
               >expand_less</span
             >
@@ -25,7 +30,7 @@
         </button>
         <transition name="fade">
           <div
-            v-show="item.index == menu.activeButton.split('-')[0]"
+            v-show="item.index == activeButton.split('-')[0]"
             class="nav1-wrapper"
           >
             <button
@@ -33,7 +38,7 @@
               :key="item1.index"
               @click.stop="item1.click"
               :class="
-                item1.index == menu.activeButton
+                item1.index == activeButton
                   ? 'nav1-button nav1-button-active'
                   : 'nav1-button'
               "
@@ -59,6 +64,14 @@ export default {
       return props.navMenu;
     });
 
+    var menuItem = computed(() => {
+      return props.navMenu.navItem;
+    });
+
+    var activeButton = computed(() => {
+      return props.navMenu.activeButton;
+    });
+
     nextTick(() => {
       var nav = document.getElementById("nav").style;
       watch(
@@ -78,8 +91,17 @@ export default {
       );
     });
 
+    function getLogo(src) {
+      if (src) {
+        return require("@/assets/img/"+src);
+      }
+    }
+
     return {
       menu,
+      menuItem,
+      activeButton,
+      getLogo,
     };
   },
 };
@@ -87,7 +109,6 @@ export default {
 
 <style scoped>
 .nav {
-  margin-top: 40px;
   width: var(--nswidth);
   text-align: right;
   float: right;

@@ -1,8 +1,15 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="160px">
-        <Navcation :navMenu="navMenu" />
+      <el-aside>
+        <div>
+          <Navcation :navMenu="navMenu" />
+          <div class="btn-add-acc">
+            <button class="button1 button1-action button1-pill btn-add-acc" @click="addAccount">
+              添加账户
+            </button>
+          </div>
+        </div>
       </el-aside>
       <el-main class="el-main">
         <router-view></router-view>
@@ -34,7 +41,7 @@ export default {
       activeButton: "0",
       styleName: "--ns",
       style: {
-        width: "155px",
+        width: "160px",
 
         navButtonWidth: "120px",
         navButtonHeight: "40px",
@@ -58,68 +65,71 @@ export default {
         nav1ButtonActiveWidth: "100px",
         nav1ButtonActiveBC: "#ff6319",
       },
-      navItem: getUserExchangeToNav(),
+      navItem: computed(() => {
+        var userExs = store.state.exchangeStore.userExchange;
+        var result = [];
+        for (let index = 0; index < userExs.length; index++) {
+          var item = {};
+          var userEx = userExs[index];
+          item.index = "" + index;
+          item.name = userEx.nickName;
+          item.logo = 'exchangeLogo/'+userEx.exchangeName+'.png';
+          item.click = () => {
+            if (item.index == navMenu.activeButton) {
+              navMenu.activeButton = "-1";
+            } else {
+              navMenu.activeButton = item.index;
+            }
+            console.log(navMenu.activeButton);
+          };
+          item.childs = [];
+          if (userEx.spot) {
+            item.childs.push({
+              index: "" + index + "-1",
+              name: "现货",
+              click: () => {
+                navMenu.activeButton = "" + index + "-1";
+                console.log(navMenu.activeButton);
+              },
+            });
+          }
+          if (userEx.usdFutures) {
+            item.childs.push({
+              index: "" + index + "-2",
+              name: "U永续",
+              click: () => {
+                navMenu.activeButton = "" + index + "-2";
+                console.log(navMenu.activeButton);
+              },
+            });
+          }
+          if (userEx.coinFutures) {
+            item.childs.push({
+              index: "" + index + "-3",
+              name: "币永续",
+              click: () => {
+                navMenu.activeButton = "" + index + "-3";
+                console.log(navMenu.activeButton);
+              },
+            });
+          }
+          if (userEx.options) {
+            item.childs.push({
+              index: "" + index + "-4",
+              name: "期权",
+              click: () => {
+                navMenu.activeButton = "" + index + "-4";
+                console.log(navMenu.activeButton);
+              },
+            });
+          }
+          result.push(item);
+        }
+
+        return result;
+      }),
     });
 
-    function getExchangeLogo(exchangeName) {
-      return require("@/assets/img/exchangeLogo/" + exchangeName + ".png");
-    }
-    function getUserExchangeToNav() {
-      var userExs = store.state.exchangeStore.userExchange;
-      var result = [];
-      for (let index = 0; index < userExs.length; index++) {
-        var item = {};
-        var userEx = userExs[index];
-        item.index = "" + index;
-        item.name = userEx.nickName;
-        item.click = () => {
-          navMenu.activeButton = "" + index;
-          console.log(navMenu.activeButton);
-        };
-        item.childs = [];
-        if (userEx.spot) {
-          item.childs.push({
-            index: "" + index + "-1",
-            name: "现货",
-            click: () => {
-              navMenu.activeButton = "" + index + "-1";
-              console.log(navMenu.activeButton);
-            },
-          });
-        }
-        if (userEx.usdFutures) {
-          item.childs.push({
-            index: "" + index + "-2",
-            name: "U永续",
-            click: () => {
-              navMenu.activeButton = "" + index + "-2";
-              console.log(navMenu.activeButton);
-            },
-          });
-        }
-        if (userEx.coinFutures) {
-          item.childs.push({
-            index: "" + index + "-3",
-            name: "币永续",
-            click: () => {
-              navMenu.activeButton = "" + index + "-3";
-              console.log(navMenu.activeButton);
-            },
-          });
-        }
-        if (userEx.options) {
-          item.childs.push({index: "" + index + "-4",
-            name: "期权",
-            click: () => {
-              navMenu.activeButton = "" + index + "-4";
-              console.log(navMenu.activeButton);
-            },});
-        }
-        result.push(item);
-      }
-
-      return result;
-    }
     function addAccount() {
       router.push("/tradeAccount/add");
     }
@@ -148,7 +158,6 @@ export default {
       navMenu,
       scrollbar,
       exchangeList,
-      getExchangeLogo,
       addAccount,
     };
   },
@@ -176,8 +185,9 @@ export default {
   position: relative;
 }
 
-.aside {
-  width: 200px;
+.el-aside {
+  width: 160px;
+  height: 95vh;
 }
 
 .hint {
@@ -204,5 +214,11 @@ export default {
 .add-acc-button {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.btn-add-acc{
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
 }
 </style>
