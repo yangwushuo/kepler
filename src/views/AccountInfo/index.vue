@@ -749,7 +749,7 @@ input[type="text"]:valid {
 }
 
 .email-dialog-wrapper .email-dialog-wrapper-item #ver-code-butt {
-  width: 27%;
+  width: auto;
   height: 40px;
   margin-left: 10px;
   line-height: 40px;

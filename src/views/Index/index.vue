@@ -1,158 +1,250 @@
 <template>
-  <div class="index_wrapper">
-    <div class="wrapper_start">
+  <div class="index-wrapper" style="width: 100%; height: 95vh">
+    <div class="title-wrapper">
+      <div>
+        <el-carousel
+          style="width: 250px; margin-left: -25px"
+          :height="carouselSetting.height"
+          :indicator-position="carouselSetting.indicatorPosition"
+          :arrow="carouselSetting.arrow"
+          :initial-index="carouselSetting.initialIndex"
+        >
+          <el-carousel-item
+            v-for="item in carouselSetting.carouseItem"
+            :key="item.id"
+          >
+            <img class="title-logo" :src="getCarouseImg(item.url)" alt="BAYC" />
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+
       <div class="title">QING PU</div>
       <div class="sub_title">专业阅读交易账户</div>
-      <div class="three_title">
-          <button class="button button--bestia" id="three_title_butt">
-            <div class="button__bg"></div>
-          <span style="font-family: 'draemH'; font-size: 20px" @click="createAccount">创建实盘</span>
+      <div class="title-btn">
+        <button
+          class="
+            button1
+            button1-plain
+            button1-border
+            button1-pill
+            button1-block
+            button1-uppercase
+          "
+        >
+          实盘广场
         </button>
+        <button
+          class="
+            button1
+            button1-plain
+            button1-border
+            button1-pill
+            button1-block
+            button1-uppercase
+          "
+        >
+          创建实盘
+        </button> 
+      </div>
+    </div>
+    <div class="side-wrapper" ref="sideWrapper">
+      <div class="countdown-wrapper">
+        <Countdown :countdownSetting="countdownSetting"/>
+        <div style="width:280px;height: 6px;background-color: white;border-radius: 2px;"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
-import { ElMessage } from 'element-plus';
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { reactive, ref } from "@vue/reactivity";
+import Countdown from "@/components/Countdown/index.vue";
+import * as THREE from "three";
+import HALO from "vanta/dist/vanta.halo.min";
+import { nextTick, onBeforeMount, onBeforeUnmount } from "@vue/runtime-core";
 export default {
   name: "Index",
-  setup(){
-
+  components: {
+    Countdown,
+  },
+  setup() {
     const route = useRouter();
     const store = useStore();
+    const sideWrapper = ref(null);
+    var halo = ref(null);
 
-    function createAccount(){
-      //判断当前用户是否登录
-      if(store.state.userInfoStore.userInfo.username){
-        route.push('/tradAccount/add');
-      }else{
-        //提示用户登录
-        errHint('请先登录再创建');
-      }
+    var countdownSetting = reactive({
+      data: {
+        title: "Bitcoin减半",
+        autoStart: false,
+        expiryTime: "1664467200",
+      },
+      style: {
+        titleFontSize: "22px",
+        titleColor: "white",
+        fontFamily: "dreamH",
+        fontSize: "30px",
+        dayColor: "white",
+        hourColor: "white",
+        minuteColor: "white",
+        secondColor: "white",
+        separatorSize: "16px",
+        separatorColor: "white",
+      },
+      expiryTimeHandler: () => {},
+    });
+
+    var carouselSetting = reactive({
+      height: "250px",
+      indicatorPosition: "outside",
+      arrow: "never",
+      initialIndex: 1,
+      carouseItem: [
+        {
+          id: 1,
+          url: "NFT/1.png",
+        },
+        {
+          id: 2,
+          url: "NFT/2.png",
+        },
+        {
+          id: 3,
+          url: "NFT/3.png",
+        },
+        {
+          id: 4,
+          url: "NFT/4.png",
+        },
+        {
+          id: 5,
+          url: "NFT/5.png",
+        },
+      ],
+    });
+
+    var timelineSetting = reactive({
+      hideTimestamp: true,
+    });
+
+    function createAccount() {
+      route.push("/tradeAccount/add");
     }
 
-    //弹窗
-    function errHint(msg, time = 3000) {
-      return ElMessage({
-        showClose: true,
-        message: msg,
-        type: "error",
-        center: true,
-        effect: "dark",
-        description: "",
-        showIcon: true,
-        offset: 100,
-        duration: time,
+    function getCarouseImg(url) {
+      return require("@/assets/img/" + url);
+    }
+
+    function getEndDate() {
+      return new Date(Date.parse("5/3/2024"));
+    }
+
+    nextTick(() => {
+      halo = HALO({
+        el: sideWrapper.value,
+        THREE: THREE,
+        color: 0x111111,
+        waveHeight: 20,
+        shininess: 50,
+        waveSpeed: 1.5,
+        zoom: 0.75,
+        backgroundColor: "#24292E",
+        amplitudeFactor: 0,
+        xOffset: 0.15,
+        yOffset: 0.0,
+        size: 0.9,
+        speed: 0.4
       });
-    }
+    });
+
+    onBeforeUnmount(()=>{
+      halo.destroy();
+    })
 
     return {
+      sideWrapper,
+      countdownSetting,
+      carouselSetting,
       createAccount,
-    }
-  }
+      getCarouseImg,
+      getEndDate,
+    };
+  },
 };
 </script>
 
 <style scoped>
 .index_wrapper {
+  background-color: transparent;
 }
 
-.index_wrapper .wrapper_start {
+.title-wrapper {
+  position: absolute;
+  top: 150px;
+  left: 150px;
+  z-index: 2;
+}
+
+.side-wrapper {
+  position: absolute;
+  width: 100%;
   height: 95vh;
-  background-image: url("@/assets/img/index_back.png");
-  background-repeat: no-repeat;
-  background-size: 80%;
-  background-position: center top;
-  background-color: var(--mainbgcolor);
+  overflow: hidden;
+  z-index: 1;
 }
 
-.wrapper_start .title {
-  font-size: 90px;
+.side-wrapper .countdown-wrapper{
+  position: relative;
+  width: 300px;
+  top: 45%;
+  left: 60%;
+}
+
+.title-wrapper .title-logo {
+  width: 200px;
+  border-radius: 5%;
+  margin: 50px 25px 0px 25px;
+}
+
+.title-wrapper .title-btn {
+  display: flex;
+}
+
+.title-wrapper .title-btn button {
+  font-size: 18px;
+  font-weight: bold;
+  height: 50px;
+  margin-top: 20px;
+  margin-right: 30px;
+}
+
+.title-wrapper .title {
+  font-size: 85px;
   color: white;
   font-family: "Bebas Neue";
-  position: relative;
-  text-align: center;
-  top: 30%;
 }
 
-.wrapper_start .sub_title {
-  font-size: 75px;
+.title-wrapper .sub_title {
+  font-size: 70px;
   color: white;
   font-family: "dreamH";
-  position: relative;
-  text-align: center;
-  top: 28%;
 }
 
-.wrapper_start .three_title {
-  position: relative;
-  top: 30%;
-  display: flex;
-  justify-content: center;
+.side-wrapper .timeline-wrapper {
+  width: auto;
+  height: auto;
+  padding: 20px;
+  background-color: #6d6e70;
+  border-radius: 20px;
 }
 
-.wrapper_start .three_title #three_butt {
-}
-
-@keyframes huerotate {
-  100% {
-    filter: hue-rotate(360deg);
-  }
-}
-
-.button--bestia .button__bg {
-  top: 0;
-  left: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: #e7e7e7;
-  border-radius: 0.9rem;
-  overflow: hidden;
-  transition: transform 0.2s cubic-bezier(0.1, 0, 0.3, 1);
-}
-
-.button--bestia:hover .button__bg {
-  transform: scale3d(1.1, 1, 1);
-}
-
-.button--bestia .button__bg::before,
-.button--bestia .button__bg::after {
-  content: "";
-  position: absolute;
-  background: #ffff;
-}
-
-.button--bestia .button__bg::before {
-  width: 110%;
-  height: 0;
-  padding-bottom: 110%;
-  top: 50%;
-  left: 50%;
-  border-radius: 50%;
-  transform: translate3d(-50%, -50%, 0) scale3d(0, 0, 1);
-}
-
-.button--bestia:hover .button__bg::before {
-  transition: transform 0.4s cubic-bezier(0.1, 0, 0.3, 1);
-  transform: translate3d(-50%, -50%, 0) scale3d(1, 1, 1);
-}
-
-.button--bestia .button__bg::after {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.button--bestia:hover .button__bg::after {
-  opacity: 1;
-  transition-duration: 0.01s;
-  transition-delay: 0.3s;
+.side-wrapper .timeline-wrapper:nth-child(2) {
+  width: auto;
+  height: auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
 }
 </style>

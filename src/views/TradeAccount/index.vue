@@ -2,13 +2,20 @@
   <div class="common-layout">
     <el-container>
       <el-aside>
-        <div>
-          <Navcation :navMenu="navMenu" />
-          <div class="btn-add-acc">
-            <button class="button1 button1-action button1-pill btn-add-acc" @click="addAccount">
-              添加账户
-            </button>
-          </div>
+        <div class="navigation">
+          <el-scrollbar max-height="95vh">
+            <div style="padding: 12px;">
+              <Navcation :navMenu="navMenu" />
+              <div class="btn-add-acc">
+                <button
+                  class="button1 button1-action button1-pill btn-add-acc"
+                  @click="addAccount"
+                >
+                  添加账户
+                </button>
+              </div>
+            </div>
+          </el-scrollbar>
         </div>
       </el-aside>
       <el-main class="el-main">
@@ -46,7 +53,7 @@ export default {
         navButtonWidth: "120px",
         navButtonHeight: "40px",
         navButtonRadius: "20px 20px 20px 20px", //圆角矩形高度一半
-        navButtonBC: "#8f8f8c",
+        navButtonBC: "#52565e",
         navButtonFontSize: "16px",
         navButtonFontBC: "white",
         navButtonHoverWidth: "135px",
@@ -71,23 +78,24 @@ export default {
         for (let index = 0; index < userExs.length; index++) {
           var item = {};
           var userEx = userExs[index];
+          item.id = userEx.id;
           item.index = "" + index;
           item.name = userEx.nickName;
-          item.logo = 'exchangeLogo/'+userEx.exchangeName+'.png';
-          item.click = () => {
-            if (item.index == navMenu.activeButton) {
+          item.logo = "exchangeLogo/" + userEx.exchangeName + ".png";
+          item.click = (item) => {
+            if (navMenu.activeButton == item.index) {
               navMenu.activeButton = "-1";
             } else {
               navMenu.activeButton = item.index;
             }
-            console.log(navMenu.activeButton);
+            router.push(`/tradeAccount/show/${item.id}`);
           };
           item.childs = [];
           if (userEx.spot) {
             item.childs.push({
               index: "" + index + "-1",
               name: "现货",
-              click: () => {
+              click: (index) => {
                 navMenu.activeButton = "" + index + "-1";
                 console.log(navMenu.activeButton);
               },
@@ -97,7 +105,7 @@ export default {
             item.childs.push({
               index: "" + index + "-2",
               name: "U永续",
-              click: () => {
+              click: (index) => {
                 navMenu.activeButton = "" + index + "-2";
                 console.log(navMenu.activeButton);
               },
@@ -107,7 +115,7 @@ export default {
             item.childs.push({
               index: "" + index + "-3",
               name: "币永续",
-              click: () => {
+              click: (index) => {
                 navMenu.activeButton = "" + index + "-3";
                 console.log(navMenu.activeButton);
               },
@@ -117,7 +125,7 @@ export default {
             item.childs.push({
               index: "" + index + "-4",
               name: "期权",
-              click: () => {
+              click: (index) => {
                 navMenu.activeButton = "" + index + "-4";
                 console.log(navMenu.activeButton);
               },
@@ -125,7 +133,6 @@ export default {
           }
           result.push(item);
         }
-
         return result;
       }),
     });
@@ -171,8 +178,8 @@ export default {
 }
 
 .navigation {
-  width: 200px;
-  display: block;
+  width: 180px;
+  margin-top: 20px;
 }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
@@ -186,7 +193,7 @@ export default {
 }
 
 .el-aside {
-  width: 160px;
+  width: 180px;
   height: 95vh;
 }
 
@@ -216,9 +223,10 @@ export default {
   margin-bottom: 20px;
 }
 
-.btn-add-acc{
+.btn-add-acc {
   display: block;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: 0;
   margin-top: 20px;
 }
 </style>

@@ -6,6 +6,7 @@ const AddAccount = () => import('@/views/AddAccount'); //添加账户页面
 const PersonalCenter = () => import('@/views/PersonalCenter'); //个人中心页面
 const AccountInfo = () => import('@/views/AccountInfo'); //个人信息
 const TradeAccountInfo = () => import('@/views/TradeAccountInfo'); //交易账户信息
+const TradeAccountShow = () => import('@/views/TradeAccountShow'); //交易账户信息展示
 
 export default [
 
@@ -48,6 +49,20 @@ export default [
         title: '添加账号',
         isAuth: true
       },
+    }, {
+      path: 'show/:id',
+      component: TradeAccountShow,
+      meta: {
+        title: '账号展示',
+        isAuth: true
+      },
+      props: ({
+        params
+      }) => {
+        return {
+          id: ""+params.id,
+        }
+      }
     }]
   },
   //个人中心页面

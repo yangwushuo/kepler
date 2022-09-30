@@ -1,7 +1,7 @@
 <template>
   <div class="nav" id="nav">
     <ul>
-      <li v-for="item in menuItem" :key="item.index" @click="item.click">
+      <li v-for="item in menuItem" :key="item.index" @click="item.click(item)">
         <button
           :class="
             item.index == activeButton.split('-')[0]
@@ -11,18 +11,18 @@
         >
           <div class="nav-title">
             <img
-              style="width: 20px; margin-right: 5px;"
+              style="width: 20px; margin-right: 5px;" 
               v-if="item.logo"
               :src="getLogo(item.logo)"
             />
             <span>{{ item.name }}</span>
             <span
-              v-show="item.index != activeButton && item.childs"
+              v-show="item.index != activeButton.split('-')[0] && item.childs"
               class="material-symbols-outlined"
               >expand_more</span
             >
             <span
-              v-show="item.index == activeButton && item.childs"
+              v-show="item.index == activeButton.split('-')[0] && item.childs"
               class="material-symbols-outlined"
               >expand_less</span
             >
@@ -36,7 +36,7 @@
             <button
               v-for="item1 in item.childs"
               :key="item1.index"
-              @click.stop="item1.click"
+              @click.stop="item1.click(item1.index)"
               :class="
                 item1.index == activeButton
                   ? 'nav1-button nav1-button-active'

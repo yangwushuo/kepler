@@ -48,6 +48,7 @@ a {
   background-color: var(--mainbgcolor);
   min-height: 95vh;
   margin: 0;
+  z-index: -1;
 }
 
 </style>
