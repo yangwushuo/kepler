@@ -188,7 +188,7 @@ export default {
 
 .el-main {
   background-color: var(--mainbgcolor);
-  padding: 0;
+  padding: 2rem 0 2rem 2rem;
   position: relative;
 }
 
