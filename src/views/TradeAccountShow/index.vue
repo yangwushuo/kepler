@@ -19,14 +19,15 @@
       </div>
       <div>
         <el-date-picker
-          v-model="value2"
-          type="daterange"
+          popper-class="date-picker"
+          v-model="datePickerSet.value"
+          :type="datePickerSet.type"
           unlink-panels
-          range-separator="To"
-          start-placeholder="Start date"
-          end-placeholder="End date"
-          :shortcuts="shortcuts"
-          size="default"
+          :range-separator="datePickerSet.rangeSeparator"
+          :start-placeholder="datePickerSet.startPlaceholder"
+          :end-placeholder="datePickerSet.endPlaceholder"
+          :size="datePickerSet.size"
+          :format="datePickerSet.format"
         />
       </div>
     </div>
@@ -75,7 +76,6 @@ import VChart from "vue-echarts";
 import * as echarts from "echarts";
 import { reactive, watch, ref } from "vue";
 import analyze from "rgbaster";
-import { max } from "lodash-es";
 export default {
   name: "TradeAccountShow",
   components: {
@@ -97,6 +97,20 @@ export default {
         console.log("Hello");
       },
     });
+
+    var datePickerSet = reactive({
+      value: [new Date(), new Date()],
+      size: 'default',
+      type: 'daterange',
+      format: 'YYYY-MM-DD',
+      defaultTime:"",
+      prefixIcon: "",
+      clearIcon: "",
+      rangeSeparator: 'To',
+      startPlaceholder: '开始时间',
+      endPlaceholder: '结束时间',
+      shortcuts:null,
+    })
 
     var optionSet = reactive([
       {
@@ -450,12 +464,14 @@ export default {
     return {
       tradeHistoryOption,
       timeRadioSet,
+      datePickerSet,
       optionSet,
       getCoinLogo,
       getCoinColor,
       activeOption,
       setActiveOption,
       pieOption,
+
     };
   },
 };
@@ -518,5 +534,10 @@ export default {
 
 .option-wrapper .option-info .title {
   font-size: 16px;
+}
+
+.date-picker{
+  height: 50px;
+  background-color: red !important;
 }
 </style>
