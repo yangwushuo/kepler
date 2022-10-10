@@ -4,7 +4,7 @@
       <el-aside>
         <div class="navigation">
           <el-scrollbar max-height="95vh">
-            <div style="padding: 12px;">
+            <div style="padding: 12px">
               <Navcation :navMenu="navMenu" />
               <div class="btn-add-acc">
                 <button
@@ -19,7 +19,7 @@
         </div>
       </el-aside>
       <el-main class="el-main">
-        <router-view></router-view>
+        <router-view ></router-view>
       </el-main>
     </el-container>
   </div>
@@ -28,7 +28,7 @@
 <script>
 import { reactive } from "vue";
 import { useStore } from "vuex";
-import { computed, onMounted } from "@vue/runtime-core";
+import { computed, onBeforeMount, onUpdated, watch } from "@vue/runtime-core";
 import { ElMessage } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 import Navcation from "@/components/Navcation/index.vue";
@@ -83,12 +83,14 @@ export default {
           item.name = userEx.nickName;
           item.logo = "exchangeLogo/" + userEx.exchangeName + ".png";
           item.click = (item) => {
-            if (navMenu.activeButton == item.index) {
-              navMenu.activeButton = "-1";
-            } else {
-              navMenu.activeButton = item.index;
+            if (route.path.indexOf(item.id) == -1) {
+              if (navMenu.activeButton == item.index) {
+                navMenu.activeButton = "-1";
+              } else {
+                navMenu.activeButton = item.index;
+              }
+              router.push(`/tradeAccount/show/${item.id}`);
             }
-            router.push(`/tradeAccount/show/${item.id}`);
           };
           item.childs = [];
           if (userEx.spot) {
@@ -157,9 +159,18 @@ export default {
     var exchangeList = computed(() => {
       return store.state.exchangeStore.userExchange;
     });
-    onMounted(() => {
+
+    watch(()=>store.state.exchangeStore.userExchange,(n)=>{
+      if(n.length>0){
+        router.push(`/tradeAccount/show/${n[0].id}`);
+      }
+    },{
+      immediate:true
+    })
+
+    onBeforeMount(() => {
       //请求获取该用户拥有的交易所账户
-      store.dispatch("exchangeStore/getUserExchange");
+      store.dispatch("exchangeStore/getUserExchange")
     });
     return {
       navMenu,

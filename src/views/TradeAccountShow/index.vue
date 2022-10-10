@@ -167,9 +167,8 @@
 <script>
 import VChart from "vue-echarts";
 import * as echarts from "echarts";
-import { reactive, watch, ref } from "vue";
+import { computed, reactive, watch } from "vue";
 import analyze from "rgbaster";
-import { datePickTypes } from "element-plus";
 export default {
   name: "TradeAccountShow",
   components: {
@@ -179,6 +178,7 @@ export default {
     id: String,
   },
   setup(props) {
+
     var activeOption = reactive({
       id: '',
       name: '',
@@ -1222,4 +1222,5 @@ export default {
 .trade-table .trade-table-row .trade-table-row-sell {
   color: #e4002b;
 }
+
 </style>

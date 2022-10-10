@@ -11,11 +11,11 @@
         >
           <div class="nav-title">
             <img
-              style="width: 20px; margin-right: 5px;" 
+              style="width: 20px;height: 20px; margin-right: 5px;" 
               v-if="item.logo"
               :src="getLogo(item.logo)"
             />
-            <span>{{ item.name }}</span>
+            <span class="title">{{ item.name }}</span>
             <span
               v-show="item.index != activeButton.split('-')[0] && item.childs"
               class="material-symbols-outlined"
@@ -43,7 +43,7 @@
                   : 'nav1-button'
               "
             >
-              <span>{{ item1.name }}</span>
+              <span class="title">{{ item1.name }}</span>
             </button>
           </div>
         </transition>
@@ -120,9 +120,11 @@ export default {
 }
 
 .nav .nav-title {
+  width: var(--nsnavButtonWidth);
   display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
 }
 
 .nav .nav-button {
@@ -182,4 +184,13 @@ export default {
 .fade-leave-active {
   transition: opacity 0.3s;
 }
+
+.title{
+  width: auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
 </style>

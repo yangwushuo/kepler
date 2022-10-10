@@ -1,8 +1,8 @@
 <template>
   <div>
     <Header></Header>
-    <div class="wrapper">
-      <router-view ></router-view>
+    <div class="wrapper-all">
+      <router-view></router-view>
     </div>
     <Footer></Footer>
   </div>
@@ -19,7 +19,7 @@ export default {
     Footer,
   },
   setup() {
-    const store = useStore(); 
+    const store = useStore();
 
     //判断本地是否存有token
     var token = localStorage.getItem("qp-token");
@@ -33,22 +33,37 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 body {
   /* background: var(--mainbgcolor); */
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
+  overflow: hidden;
 }
 
 a {
   text-decoration: none;
 }
 
-.wrapper{
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 1em;
+  background-color: #52565e;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--mainbgcolor);
+  opacity: 0.4;
+}
+
+.wrapper-all {
   background-color: var(--mainbgcolor);
   min-height: 95vh;
   margin: 0;
   z-index: -1;
 }
-
 </style>

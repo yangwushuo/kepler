@@ -277,7 +277,7 @@ export default {
 }
 
 .site-header__end {
-  width: 200px;
+  width: auto;
   font-size: 18px;
 }
 

@@ -127,6 +127,7 @@ import { ElMessage } from "element-plus";
 import { useStore } from "vuex";
 import _ from "lodash";
 import { computed } from "@vue/runtime-core";
+import { useRouter } from 'vue-router';
 export default {
   name: "AccountForm",
   props: {
@@ -150,6 +151,7 @@ export default {
     });
 
     const store = useStore();
+    const router = useRouter();
 
     var getCaptchaShow = reactive({
       initial: true,
@@ -182,6 +184,7 @@ export default {
                 formData.key = "";
                 //重新发起获取用户交易账号的请求
                 store.dispatch("exchangeStore/getUserExchange");
+                router.push('/tradeAccount');
               } else {
                 //判断错误进行提示
               }
